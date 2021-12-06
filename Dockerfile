@@ -5,18 +5,17 @@ ARG VARIANT="3.8"
 FROM mcr.microsoft.com/vscode/devcontainers/python:0-${VARIANT}
 
 # Define working dir
-ARG WORKDIR="/home/code-acme"
-WORKDIR ${WORKDIR}
+ARG WORKDIR="/tmp/pip-tmp/"
 
 # Copy file in working dir
-COPY . $WORKDIR
+COPY setup.py $WORKDIR
 
 RUN pip install --upgrade pip setuptools wheel 
-RUN pip3 --disable-pip-version-check --no-cache-dir install -e ${WORKDIR}
+RUN python -m pip --disable-pip-version-check --no-cache-dir install -e $WORKDIR[dev]   \
+    && rm -rf ${WORKDIR}
 
-# [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
-# COPY requirements.txt /tmp/pip-tmp/
-
+# RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
+#    && rm -rf /tmp/pip-tmp
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
