@@ -7,28 +7,28 @@ from setuptools import find_packages
 from setuptools import setup
 
 # Core requirements for installation
-install_requirements = [
-    'pytest-xdist',
-    'ipykernel',
-    'ipython',
-    'dm-acme==0.2.2',
-    'dm-acme[jax,tf,launchpad,envs]==0.2.2',
-    'tfp-nightly==0.14.0.dev20210818', # Force the same version as in released and not in pypi
-    'tensorflow_probability==0.14.1', # dm-acme v0.2.2 comes with 
-],
+install_requirements = []
 
 # Specifics for the tagged version https://github.com/deepmind/acme/releases/tag/0.2.2
-# The zip file contains the requirements for the version. 
+# The zip file contains the requirements for the version.
 
 # Define extra requirements depending on user case
 dm_requirements = [
-    'dm_env',
-    'dm-acme',
-    'dm-reverb',
-    'dm-sonnet',
-    'trfl',
-    'dm-acme[launchpad]'
+    'dm-acme==0.2.2',
+    'dm-acme[jax,tf,launchpad,envs]==0.2.2',
+    'tfp-nightly==0.14.0.dev20210818', # Force the same version as in released and not in pypi
+    'tensorflow_probability==0.14.1', # dm-acme v0.2.2 comes with
 ]
+
+test_requirements = [
+    'pytest-xdist',
+]
+
+dev_requirements = [
+    'pytest-xdist',
+    'ipykernel',
+    'ipython',
+] + dm_requirements + test_requirements
 
 # Extras
 long_description = """TODO  """
@@ -45,8 +45,9 @@ setup(
     packages=find_packages(),
     install_requires=install_requirements,
     extras_require={
-        'dm':     dm_requirements,
-
+        'dm':  dm_requirements,
+        'dev':  dev_requirements,
+        'test': test_requirements,
     },
     url="https://github.com/cisk1990/code-acme",
     classifiers=[
@@ -60,4 +61,3 @@ setup(
         'Topic :: Scientific/Engineering :: Deep Reinforcement Learning',
     ],
 )
-
