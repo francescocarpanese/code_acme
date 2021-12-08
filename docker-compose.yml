@@ -1,0 +1,9 @@
+version: '0.0'
+services:
+  bash:
+    image: code-acme:0.0
+    build: .
+    command: /bin/bash
+    volumes:
+      - ${PWD}:/home/code-acme
+    working_dir: /home/code-acme
