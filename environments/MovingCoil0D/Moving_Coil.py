@@ -5,17 +5,19 @@ from __future__ import annotations
 import dm_env
 from dm_env import specs
 import numpy as np
-
+from environments.MovingCoil0D.Tasks.Dummy import Dummy
+from environments.MovingCoil0D.Tasks.Task  import Task
 
 class Moving_Coil(dm_env.Environment):
     """Environment built on the `dm_env.Environment` class.
-    The agent must change the current in 2 fixed coils, located at x1 and x2, on the sides of a moving coil, in order to
-    bring the moving coil to the desired x target. 
+    The agent must change the current in 2 fixed coils, located at x1 and x2,
+    on the sides of a moving coil, in order to
+    bring the moving coil to the desired x target.
 
     Physic law for the moving coil:
     ds/dt = F(s), with state s = [x, dx/dt], F(s) = []
 
-    Time discretization 1st order Euler explicit scheme s_t+1 = dt_sim*F(s_t) + s_t 
+    Time discretization 1st order Euler explicit scheme s_t+1 = dt_sim*F(s_t) + s_t
 
     Observation are assumed to be istantaneous with action
     Actions are kept constant during simulation loop
@@ -31,7 +33,8 @@ class Moving_Coil(dm_env.Environment):
                  tend: float = float(np.inf), # Tot simulation interval 
                  x_goal: float = 0.,  # x target for rewards
                  discount: float = 0.9995,  # Discount factor
-                 init_state: np.ndarray = np.array([0., 0.]), dtype=np.float32):  # Initial state [x, dxdt]
+                 init_state: np.ndarray = np.array([0., 0.], dtype=np.float32),  # Initial state [x, dxdt]
+                 task: Task = Dummy() ): 
         
         # Fetch parameters
         self._state = init_state
@@ -47,6 +50,9 @@ class Moving_Coil(dm_env.Environment):
         # TODO need to check that dt_ctr is multiple of dt_sim
         self._n_sub_step = int(dt_ctr/dt_sim) # This operation is equivalent to floor
         self._tend = tend
+        self._t = 0.
+        self._n_phys_steps = 0
+        self._task = task
         
 
     def reset(self) -> dm_env.TimeStep[float, float, np.ndarray]:
@@ -62,7 +68,7 @@ class Moving_Coil(dm_env.Environment):
         # Reset env
         if self._reset_next_step:
             return self.reset()
-        
+                                
         for _ in range(self._n_sub_step):
             # Advance env in time
             self._state = self._dt_sim*self.F(action) + self._state
@@ -70,7 +76,7 @@ class Moving_Coil(dm_env.Environment):
             self._t += self._dt_sim
             self._n_phys_steps += 1
 
-            # Stick coil to the boundary if reached
+            # Stick coil to the boundary if reached, force to infinity
             if self._state[0] <= self._x1:
                 self._state[0] = self._x1
                 self._state[1] = 0.
@@ -78,8 +84,8 @@ class Moving_Coil(dm_env.Environment):
                 self._state[0] = self._x2
                 self._state[1] = 0.
 
-            # Compute reward
-            reward = self.get_rew()
+            # Compute reward from task
+            reward = self._task.get_reward(self)
             
             # Check for termination criteria and return
             if self.check_truncation():
@@ -133,13 +139,4 @@ class Moving_Coil(dm_env.Environment):
         return  self._state[0] == self._x1 or \
                 self._state[0] == self._x2 or \
                 not all(np.isfinite(self._state))
-
-    # Reward function
-    def get_rew(self):
-        term_rew = 0.  # reward for termination state
-        sigma = 0.05
-        mu = self._x_goal
-        # Gauss like rewards on target
-        gauss = np.exp(-np.power(self._state[0] - mu, 2.) / (2 * np.power(sigma, 2.)))
-        return term_rew if self.check_truncation() else gauss
 
