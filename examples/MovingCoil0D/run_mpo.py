@@ -18,19 +18,33 @@ import dm_env
 import numpy as np
 import sonnet as snt
 from environments.MovingCoil0D.Moving_Coil import Moving_Coil
+from environments.MovingCoil0D.Tasks import Dummy
+from environments.MovingCoil0D.Tasks import HoldTarget
+import os
 
-
-flags.DEFINE_integer('num_episodes', 140, 'Number of episodes to run for.')
 FLAGS = flags.FLAGS
+flags.DEFINE_integer('num_episodes', 140, 'Number of episodes to run for.')
+flags.DEFINE_float('tend', 10., 'Final simulation time [s]')
+flags.DEFINE_string('task', 'HoldTarget', 'Defins task: ["Dummy","HoldTarget"]')
+flags.DEFINE_string('out_path', '.\tmp', 'Output path to store checkpoint and results' )
 
+# Create storing folder if not existing already
+if os.path.isdir(flags.DEFINE_string):
+   raise RuntimeError('Failed to create output folder. Folder already exists')
+os.mkdir(flags.DEFINE_string)
 
-def make_environment(domain_name: str = 'cartpole',
-                     task_name: str = 'balance') -> dm_env.Environment:
-  """Creates a control suite environment."""
-  environment = Moving_Coil(tend = 10.)
+def make_task(task_name: str):
+  if task_name == 'HoldTarget':
+    return HoldTarget.HoldTarget()
+  else:
+    return Dummy.Dummy()
+
+def make_environment() -> dm_env.Environment:
+  """Creates environment."""
+  task = make_task(FLAGS.task)
+  environment = Moving_Coil(tend = FLAGS.tend, task = task)
   environment = SinglePrecisionWrapper(environment) 
   return environment
-
 
 def make_networks(
     action_spec: specs.BoundedArray,
@@ -39,7 +53,7 @@ def make_networks(
     vmin: float = -150.,
     vmax: float = 150.,
     num_atoms: int = 51,
-) -> Dict[str, types.TensorTransformation]:
+    ) -> Dict[str, types.TensorTransformation]:
   """Creates networks used by the agent."""
 
   # Get total number of action dimensions from action spec.
@@ -85,7 +99,7 @@ def main(_):
       environment_spec=environment_spec,
       policy_network=agent_networks['policy'],
       critic_network=agent_networks['critic'],
-      observation_network=agent_networks['observation'],  # pytype: disable=wrong-arg-types
+      observation_network=agent_networks['observation'], 
       batch_size = 30,
       target_policy_update_period = 10,
       target_critic_update_period = 10,
