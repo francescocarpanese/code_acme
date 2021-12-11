@@ -1,5 +1,15 @@
-from environments.MovingCoil0D.Tasks.Task import Task
+""" Container for tasks"""
+from abc import ABC, abstractclassmethod
 import numpy as np
+
+class Task(ABC):
+    @abstractclassmethod
+    def get_reward(self, env) -> float:
+        pass
+
+class Dummy(Task):
+    def get_reward(self, _ ):
+        return 0
 
 class HoldTarget(Task):
     def __init__(self,

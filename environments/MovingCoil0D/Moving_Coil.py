@@ -5,8 +5,7 @@ from __future__ import annotations
 import dm_env
 from dm_env import specs
 import numpy as np
-from environments.MovingCoil0D.Tasks.Dummy import Dummy
-from environments.MovingCoil0D.Tasks.Task  import Task
+from environments.MovingCoil0D import Tasks
 
 class Moving_Coil(dm_env.Environment):
     """Environment built on the `dm_env.Environment` class.
@@ -34,7 +33,7 @@ class Moving_Coil(dm_env.Environment):
                  x_goal: float = 0.,  # x target for rewards
                  discount: float = 0.9995,  # Discount factor
                  init_state: np.ndarray = np.array([0., 0.], dtype=np.float32),  # Initial state [x, dxdt]
-                 task: Task = Dummy() ): 
+                 task: Tasks.Task = Tasks.Dummy() ): 
         
         # Fetch parameters
         self._state = init_state

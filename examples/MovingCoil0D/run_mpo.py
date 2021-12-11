@@ -18,26 +18,27 @@ import dm_env
 import numpy as np
 import sonnet as snt
 from environments.MovingCoil0D.Moving_Coil import Moving_Coil
-from environments.MovingCoil0D.Tasks import Dummy
-from environments.MovingCoil0D.Tasks import HoldTarget
+from environments.MovingCoil0D import Tasks
 import os
 
-FLAGS = flags.FLAGS
+
 flags.DEFINE_integer('num_episodes', 140, 'Number of episodes to run for.')
 flags.DEFINE_float('tend', 10., 'Final simulation time [s]')
 flags.DEFINE_string('task', 'HoldTarget', 'Defins task: ["Dummy","HoldTarget"]')
-flags.DEFINE_string('out_path', '.\tmp', 'Output path to store checkpoint and results' )
+flags.DEFINE_string('out_path', './tmp_train', 'Output path to store checkpoint and results' )
+FLAGS = flags.FLAGS
 
 # Create storing folder if not existing already
-if os.path.isdir(flags.DEFINE_string):
-   raise RuntimeError('Failed to create output folder. Folder already exists')
-os.mkdir(flags.DEFINE_string)
+def create_out_folder(path):
+  if os.path.isdir(path):
+    raise RuntimeError('Failed to create output folder. Folder already exists')
+  os.mkdir(path)
 
 def make_task(task_name: str):
   if task_name == 'HoldTarget':
-    return HoldTarget.HoldTarget()
+    return Tasks.HoldTarget()
   else:
-    return Dummy.Dummy()
+    return Tasks.Dummy()
 
 def make_environment() -> dm_env.Environment:
   """Creates environment."""
@@ -87,6 +88,9 @@ def make_networks(
 
 
 def main(_):
+  # Create out folder 
+  create_out_folder(FLAGS.out_path)
+
   # Create an environment and grab the spec.
   environment = make_environment()
   environment_spec = specs.make_environment_spec(environment)
