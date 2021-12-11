@@ -12,15 +12,17 @@ def test_default_init():
 
 # Test time stepping on default init with constant actions
 def test_time_stepping():
-    # Define constant actions
-    actions = np.array([1., 2.], dtype=np.float32)
 
+    # Instantiate env
     environment = Moving_Coil()
     TimeStep = environment.reset()
-    cumulative_reward = 0.
 
+    # Define constant actions
+    actions = np.array([1., 2.], dtype=np.float32)
+    
     # Store observations and rewards
     N_t = 30
+    cumulative_reward = 0.
     o = np.zeros([2, N_t])
     r = np.zeros([1,N_t])
     t = np.zeros([1,N_t])
@@ -31,7 +33,7 @@ def test_time_stepping():
         t[:, it] = environment._t
         cumulative_reward += TimeStep.reward
 
-    message = 'Stepping env with default init and constant action provides not finite'
+    message = 'Stepping env with default init and constant action provides not finite '
     assert np.isfinite(o).all(), message + 'observations'
     assert np.isfinite(r).all(), message + 'rewards'
 
