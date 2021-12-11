@@ -19,7 +19,7 @@ class Dummy(Task):
 
 class HoldTarget(Task):
     def __init__(self,
-                 h_goal: float = 2.
+                 h_goal: float = 1.5
                  ) -> None:
         self._h_goal = h_goal
 
@@ -28,7 +28,7 @@ class HoldTarget(Task):
 
     def get_reward(self, env):
         term_rew = 0.  # reward for termination state
-        sigma = 0.1
+        sigma = 0.5
         mu = self.get_reference(env)
         # Gauss like rewards on target
         gauss = np.exp(-np.power(env._state[0] - mu, 2.) / (2 * np.power(sigma, 2.)))
@@ -62,7 +62,7 @@ class Step(Task):
 
     def get_reward(self, env) -> float:
         term_rew = 0.  # reward for termination state
-        sigma = 0.05   
+        sigma = 0.2   
         mu = self.get_reference(env)
 
         # Gauss like reward on target

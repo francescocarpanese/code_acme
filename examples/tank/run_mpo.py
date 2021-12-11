@@ -25,7 +25,7 @@ import os
 
 flags.DEFINE_integer('num_episodes', 1000, 'Number of episodes to run for.')
 flags.DEFINE_float('tend', 2., 'Final simulation time [s]')
-flags.DEFINE_string('task', 'HoldTarget', 'Defins task: ["Dummy","HoldTarget"]')
+flags.DEFINE_string('task', 'Step', 'Defins task: ["Dummy","HoldTarget"]')
 flags.DEFINE_string('out_path', './.tmp_train', 'Output path to store checkpoint and results' )
 FLAGS = flags.FLAGS
 
@@ -54,10 +54,8 @@ def make_environment() -> dm_env.Environment:
 
 def make_networks(
     action_spec: specs.BoundedArray,
-    policy_layer_sizes: Sequence[int] = (128,128),
-    critic_layer_sizes: Sequence[int] = (128,128),
-    #policy_layer_sizes: int = (8,),
-    #critic_layer_sizes: int = (8,),
+    policy_layer_sizes: Sequence[int] = (64,64),
+    critic_layer_sizes: Sequence[int] = (64,64),
     vmin: float = 0.,
     vmax: float = 20.,
     num_atoms: int = 300,
@@ -111,10 +109,10 @@ def main(_):
       policy_network=agent_networks['policy'],
       critic_network=agent_networks['critic'],
       observation_network=agent_networks['observation'], 
-      batch_size = 20,
-      target_policy_update_period = 10,
-      target_critic_update_period = 10,
-      min_replay_size = 1,
+      batch_size = 40,
+      target_policy_update_period = 20,
+      target_critic_update_period = 20,
+      min_replay_size = 10,
   )
 
   # Run the environment loop.

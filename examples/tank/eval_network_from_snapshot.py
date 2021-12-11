@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 from environments.tank import tank
 from environments.tank import Tasks
 
-N_max_steps = 21
+N_max_steps = 42
 
 # Instantiate env
-env = tank.env(tend=2., task = Tasks.HoldTarget())
+env = tank.env(tend=2., task = Tasks.Step())
 # Env was store in single precisio hence need 
 # to use single precision to use saved net
 env = wrappers.SinglePrecisionWrapper(env) 
@@ -29,7 +29,7 @@ spec = specs.Array([2], dtype=np.float32)
 inputs = tf2_utils.add_batch_dim(tf2_utils.zeros_like(spec))
 
 # Load snapshot
-folder_path =  '/root/acme/c1b5646e-5aae-11ec-89d6-0242ac110002/snapshots/policy'
+folder_path =  '/root/acme/d5a67d06-5abc-11ec-9c56-0242ac110002/snapshots/policy'
 
 # Extract solution for debugging
 policy_net = tf.saved_model.load(folder_path)

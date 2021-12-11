@@ -12,13 +12,13 @@ class env(dm_env.Environment):
     """
     def __init__(self,
                  alpha: float = 1,
-                 dt_sim: float = 1e-1,  # [s] Discretization time interval for sim
-                 dt_ctr: float = 1e-1,   # [s] ctr time interval
+                 dt_sim: float = 0.5e-1,  # [s] Discretization time interval for sim
+                 dt_ctr: float = 0.5e-1,   # [s] ctr time interval
                  tend: float = float(np.inf), # Tot simulation interval 
                  discount: float = 0.9995,  # Discount factor
                  reference: float = 0., 
                  hmax = 5,
-                 maxinflow = 10., # max sink is alpha*sqrt(h_max)
+                 maxinflow = 50., # max sink is alpha*sqrt(h_max)
                  init_state: np.ndarray = np.array([1.], dtype=np.float32),  # Initial state [x, dxdt]
                  task: Tasks.Task = Tasks.Dummy() ): 
         
