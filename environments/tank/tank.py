@@ -18,9 +18,10 @@ class env(dm_env.Environment):
                  discount: float = 0.9995,  # Discount factor
                  reference: float = 0., 
                  hmax = 5,
-                 maxinflow = 50., # max sink is alpha*sqrt(h_max)
+                 maxinflow = 5., # max sink is alpha*sqrt(h_max)
                  init_state: np.ndarray = np.array([1.], dtype=np.float32),  # Initial state [x, dxdt]
-                 task: Tasks.Task = Tasks.Dummy() ): 
+                 task: Tasks.Task = Tasks.Dummy(), 
+                 debug: bool = False ): 
         
         # Fetch parameters
         self._state = init_state
@@ -38,12 +39,15 @@ class env(dm_env.Environment):
         self._n_phys_steps = 0
         self._task = task
         self._maxinflow = maxinflow
+        self._debug = debug
+        self._datadict = []
 
     def reset(self) -> dm_env.TimeStep[float, float, np.ndarray]:
         """Returns the first `TimeStep` of a new episode."""
         self._reset_next_step = False
         self._state = self._init_state
         self._t = 0.
+        self._datadict = []
         self._n_phys_steps = 0 # Number of step for physics simulator
         return dm_env.restart(self._observation())
 
@@ -52,6 +56,9 @@ class env(dm_env.Environment):
         # Reset env
         if self._reset_next_step:
             return self.reset()
+
+        if self._debug:
+            self._extend_debug_datadict(action)
                                 
         for _ in range(self._n_sub_step):
             # Advance env in time
@@ -85,7 +92,7 @@ class env(dm_env.Environment):
                                      observation=self._observation())
 
     def _F(self, action):
-        return -self._alpha*np.sqrt( self._state ) + action
+        return -self._alpha*np.sqrt(self._state) + action
 
     def observation_spec(self) -> specs.Array:
         """Returns the observation spec."""
@@ -112,3 +119,23 @@ class env(dm_env.Environment):
         return  self._state[0] >= self._hmax or \
                 not all(np.isfinite(self._state))
 
+    def _extend_debug_datadict(self, action):
+        # Data are stored before taking the step
+        self._datadict.append(
+            {
+                'state': self._state,
+                'action': action,
+                'time': self._t,
+                'observation': self._observation(),
+                'reward': self._task.get_reward(self)
+            }
+         )
+
+    def get_datadict(self):
+        return self._datadict
+
+    def get_packed_datadict(self):
+        # Pack data dictionary into numpy array
+        # Assume all dictionaries have the same length
+        return {key: np.asarray([ts[key] for ts in self._datadict])
+                 for key in self._datadict[0] }
