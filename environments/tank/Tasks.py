@@ -49,17 +49,6 @@ class Step(Task):
     def get_reference(self, env) -> float:
         return self._h_goal1 if  env._t < self._t_step else self._h_goal2
 
-        """ Check if a small ramp is easier to control
-        # Step with linear ramp
-        if env._t < self._t_step:
-            return self._x_goal1
-        elif env._t >= self._t_step and env._t < self._t_step + self._dt_ramp:
-            return (self._x_goal2 - self._x_goal1)/self._dt_ramp*(env._t - self._t_step) + self._x_goal1
-        else:
-            return self._x_goal2
-        """
-        
-
     def get_reward(self, env) -> float:
         term_rew = 0.  # reward for termination state
         sigma = 0.2   
