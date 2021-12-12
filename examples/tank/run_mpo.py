@@ -1,6 +1,7 @@
 # python3
 """Example running MPO on the Moving Coil env locally."""
 
+from threading import active_count
 from typing import Dict, Sequence
 
 from absl import app
@@ -9,6 +10,7 @@ from acme import specs
 from acme import types
 from acme.environment_loop import EnvironmentLoop
 from acme.wrappers.single_precision import SinglePrecisionWrapper
+from acme.wrappers.canonical_spec import CanonicalSpecWrapper
 from acme.agents.tf import dmpo
 from acme.tf import networks
 from acme.tf import utils as tf2_utils
@@ -21,9 +23,10 @@ import sonnet as snt
 from environments.tank import tank
 from environments.tank import Tasks
 import os
+import tensorflow as tf
 
 
-flags.DEFINE_integer('num_episodes', 1000, 'Number of episodes to run for.')
+flags.DEFINE_integer('num_episodes', 100, 'Number of episodes to run for.')
 flags.DEFINE_float('tend', 2., 'Final simulation time [s]')
 flags.DEFINE_string('task', 'Step', 'Defins task: ["Dummy","HoldTarget"]')
 flags.DEFINE_string('out_path', './.tmp_train', 'Output path to store checkpoint and results' )
@@ -49,6 +52,7 @@ def make_environment() -> dm_env.Environment:
   """Creates environment."""
   task = make_task(FLAGS.task)
   environment = tank.env(tend = FLAGS.tend, task = task)
+  environment = CanonicalSpecWrapper(environment, clip= True) # Clip actions by bounds
   environment = SinglePrecisionWrapper(environment) 
   return environment
 
@@ -71,7 +75,7 @@ def make_networks(
   # Create the policy network.
   policy_network = snt.Sequential([
       networks.LayerNormMLP(policy_layer_sizes),
-      networks.MultivariateNormalDiagHead(num_dimensions)
+      networks.MultivariateNormalDiagHead(num_dimensions),
   ])
 
   # The multiplexer transforms concatenates the observations/actions.
