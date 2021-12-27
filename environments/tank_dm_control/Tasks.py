@@ -4,7 +4,6 @@ import numpy as np
 from dm_control.rl.control import Task
 from dm_env import specs
 
-
 class HoldTarget(Task):
 
     def __init__(self,
@@ -17,12 +16,12 @@ class HoldTarget(Task):
         self._h_goal = h_goal
         self._maxinflow = maxinflow
         self._debug = debug
-        self._datadict = []
+        self.datadict = []
 
 
     def initialize_episode(self, physics):
         # Eventually pass some parameters
-        self._datadict = []
+        self.datadict = []
         physics.__init__()
 
     def get_reference(self):
@@ -41,7 +40,7 @@ class HoldTarget(Task):
     def before_step(self, action, physics):
         physics.set_control(action)
         # Store data dictionary for debugging
-        if self._debug: self._extend_debug_datadict(physics, action)
+        if self._debug: extend_debug_datadict(self, physics, action)
 
     def observation_spec(self, physics):
         """Returns the observation spec."""
@@ -59,31 +58,24 @@ class HoldTarget(Task):
             maximum=self._maxinflow,
             name='action')
 
-    def _observation(self) -> np.ndarray:
-        # For simplicity let the agent observe directly the state of the system
-        return np.concatenate(([self._task.get_reference(self)], self._state))
 
-
-    # ------------- Optional TO BE IMPLEMENTED ------------ 
-    def _extend_debug_datadict(self, physics, action):
-        # Data are stored before taking the step
-        self._datadict.append(
-            {
-                'state': physics._state,
-                'action': action,
-                'time': physics.time(),
-                'observation': self.get_observation(physics),
-                'reward': self.get_reward(physics)
+# ------------- Utils  ------------ 
+def extend_debug_datadict(task, physics, action):
+    # Data are stored before taking the step
+    task.datadict.append(
+        {
+            'state': physics._state,
+            'action': action,
+            'time': physics.time(),
+            'observation': task.get_observation(physics),
+            'reward': task.get_reward(physics)
             }
          )
 
-    def get_datadict(self):
-        return self._datadict
-
-    def get_packed_datadict(self):
-        # Pack data dictionary into numpy array
-        # Assume all dictionaries have the same length
-        return {key: np.asarray([ts[key] for ts in self._datadict])
-                 for key in self._datadict[0] }
+def pack_datadict(datadict):
+    # Pack data dictionary into numpy array
+    # Assume all dictionaries have the same length
+    return {key: np.asarray([ts[key] for ts in datadict])
+            for key in datadict[0] }
 
 
