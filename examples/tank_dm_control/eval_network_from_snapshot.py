@@ -19,7 +19,7 @@ from dm_control.rl.control import Environment
 
 # Instantiate env
 env = Environment(tank.physics(), Tasks.HoldTarget(debug = True), time_limit=2. )  
-# Env was store in single precisio hence need 
+# Env was store in single precision hence need 
 # to use single precision to use saved net
 env = wrappers.CanonicalSpecWrapper(env, clip= True) # Clip actions by bounds
 env = wrappers.SinglePrecisionWrapper(env) 
@@ -34,6 +34,9 @@ store_path = '/root/acme/f5a6e038-5b3d-11ec-a09d-0242ac110002/'
 store_path = '/root/acme/dae95774-5b3f-11ec-a7c0-0242ac110002/'
 store_path = '/root/acme/dae95774-5b3f-11ec-a7c0-0242ac110002/'
 store_path = '/root/acme/f8a2cac2-5cc8-11ec-a737-0242ac110002/'
+store_path = '/root/acme/1e216d28-5de4-11ec-986a-0242ac110002/'
+
+store_path = '/root/acme/03b157dc-673a-11ec-8e4d-0242ac110002/'
 
 # Load snapshot
 folder_path =  store_path +'snapshots/policy'
@@ -65,7 +68,7 @@ while not timestep.last():
     action = actor.select_action(timestep.observation) 
     timestep = env.step(action)
 
-data = env._task.get_packed_datadict()
+data = Tasks.pack_datadict(env.task.datadict)
 
 # Plot all time traces
 for key in [k for k in data.keys() if k != 'time']:
