@@ -4,19 +4,22 @@ import numpy as np
 from dm_control.rl.control import Task
 from dm_env import specs
 
-class HoldTarget(Task):
+class Step(Task):
 
     def __init__(self,
-                 h_goal = 1.,
-                 maxinflow = 5.,
-                 debug = False,
+                 maxinflow= 5.,
+                 h_goal1= 1.,
+                 h_goal2= 0.5,
+                 t_step= float('inf'),
+                 debug= False,
                  ) -> None:
         super().__init__()
-        # set parameters for the task
-        self._h_goal = h_goal
+        self._h_goal1 = h_goal1
+        self._h_goal2 = h_goal2
+        self._t_step = t_step
         self._maxinflow = maxinflow
         self._debug = debug
-        self.datadict = []
+        self.datadict = []    
 
 
     def initialize_episode(self, physics):
@@ -24,16 +27,16 @@ class HoldTarget(Task):
         self.datadict = []
         physics.__init__()
 
-    def get_reference(self):
-        return self._h_goal
+    def get_reference(self, physics) -> float:
+        return self._h_goal1 if physics.time() < self._t_step else self._h_goal2
 
     def get_observation(self, physics):
         # Let the actor observe the reference and the state
-        return np.concatenate(([self.get_reference()], physics._state))
+        return np.concatenate(([self.get_reference(physics)], physics._state))
 
     def get_reward(self, physics):
         sigma = 0.5
-        mu = self.get_reference()
+        mu = self.get_reference(physics)
         # Gaussian like rewards on target
         return np.exp(-np.power(physics._state[0] - mu, 2.) / (2 * np.power(sigma, 2.)))
     

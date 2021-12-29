@@ -6,7 +6,7 @@ from dm_control.rl.control import Environment
 
 # Test default init
 def test_default_init():
-    env = Environment(tank.physics(),Tasks.HoldTarget())
+    env = Environment(tank.physics(),Tasks.Step())
     TimeStep = env.reset()
     assert all(np.isfinite(TimeStep.observation)), 'Standard initialization-> observations not finite'
     assert all(np.isfinite(env._physics._init_state)), 'Initial state not finite'
@@ -15,7 +15,7 @@ def test_default_init():
 def test_N_timesteps():
 
     # Instantiate env
-    environment = Environment(tank.physics(),Tasks.HoldTarget())
+    environment = Environment(tank.physics(),Tasks.Step())
     TimeStep = environment.reset()
 
     # Define null constant actions
@@ -56,7 +56,7 @@ def test_N_timesteps():
 
 def test_time_stepping_time_limit():
     # Instantiate env
-    environment = Environment(tank.physics(),Tasks.HoldTarget(), time_limit= 2.)
+    environment = Environment(tank.physics(),Tasks.Step(), time_limit= 2.)
     TimeStep = environment.reset()
 
     # Define null constant actions

@@ -28,7 +28,7 @@ from dm_control.rl.control import Environment
 
 flags.DEFINE_integer('num_episodes', 100, 'Number of episodes to run for.')
 flags.DEFINE_float('tend', 2., 'Final simulation time [s]')
-flags.DEFINE_string('task', 'HoldTarget', 'Defins task: ["Dummy","HoldTarget"]')
+flags.DEFINE_string('task', 'Step', 'Defins task: ["Dummy","HoldTarget"]')
 flags.DEFINE_string('out_path', './.tmp_train', 'Output path to store checkpoint and results' )
 FLAGS = flags.FLAGS
 
@@ -42,17 +42,17 @@ def create_out_folder(path):
 # Task selector depending on flag
 def make_task(task_name: str):
   if task_name == 'HoldTarget':
-    return Tasks.HoldTarget()
+    return Tasks.Step()
   elif task_name == 'Dummy':
     return Tasks.Dummy()
   elif task_name == 'Step':
-    return Tasks.Step()
+    return Tasks.Step(t_step= 1.)
 
 
 def make_environment() -> dm_env.Environment:
   """Creates environment."""
   task = make_task(FLAGS.task)
-  environment = Environment(tank.physics(), Tasks.HoldTarget(), time_limit=2. )  
+  environment = Environment(tank.physics(), task, time_limit=2. )  
   environment = CanonicalSpecWrapper(environment= environment, clip= True) # Clip actions by bounds
   environment = SinglePrecisionWrapper(environment) 
   return environment
