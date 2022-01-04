@@ -1,5 +1,5 @@
 # python3
-"""Example running MPO on the Moving Coil env locally."""
+"""Example running MPO on the tank env locally."""
 
 from threading import active_count
 from typing import Dict, Sequence
@@ -19,41 +19,33 @@ from acme.utils import loggers
 import dm_env
 import numpy as np
 import sonnet as snt
+from acme.utils import paths
+import json
 
 from environments.tank_dm_control import tank
 from environments.tank_dm_control import Tasks
-import os
 from dm_control.rl.control import Environment
 
-
-flags.DEFINE_integer('num_episodes', 100, 'Number of episodes to run for.')
-flags.DEFINE_float('tend', 2., 'Final simulation time [s]')
-flags.DEFINE_string('task', 'Step', 'Defins task: ["Dummy","HoldTarget"]')
-flags.DEFINE_string('out_path', './.tmp_train', 'Output path to store checkpoint and results' )
+flags.DEFINE_integer('num_episodes', 150, 'Number of episodes to run for.')
+flags.DEFINE_float('time_limit', 2., 'End simulation time [s]')
+flags.DEFINE_integer('batch_size', 40, 'batch size replay buffer')
+flags.DEFINE_list('policy_layer_sizes', ['64','64'], 'MLP layer size policy net')
+flags.DEFINE_list('critic_layer_sizes', ['64','64'], 'MLP layer size critic net')
 FLAGS = flags.FLAGS
-
-# Create storing folder if not existing already
-def create_out_folder(path):
-  pass
-#  if os.path.isdir(path):
-#    raise RuntimeError('Failed to create output folder. Folder already exists')
-#  os.mkdir(path)
-
-# Task selector depending on flag
-def make_task(task_name: str):
-  if task_name == 'HoldTarget':
-    return Tasks.Step()
-  elif task_name == 'Dummy':
-    return Tasks.Dummy()
-  elif task_name == 'Step':
-    return Tasks.Step(t_step= 1.)
-
 
 def make_environment() -> dm_env.Environment:
   """Creates environment."""
-  task = make_task(FLAGS.task)
-  environment = Environment(tank.physics(), task, time_limit=2. )  
-  environment = CanonicalSpecWrapper(environment= environment, clip= True) # Clip actions by bounds
+  environment = Environment(
+    tank.physics(),
+    Tasks.Step(t_step= 1.),
+    time_limit=FLAGS.time_limit,
+  )  
+  # Clip actions by bounds
+  environment = CanonicalSpecWrapper(
+    environment= environment,
+    clip= True, 
+    ) 
+  # Wrap to single precision
   environment = SinglePrecisionWrapper(environment) 
   return environment
 
@@ -62,7 +54,7 @@ def make_networks(
     policy_layer_sizes: Sequence[int] = (64,64),
     critic_layer_sizes: Sequence[int] = (64,64),
     vmin: float = 0.,
-    vmax: float = 20.,
+    vmax: float = 40.,
     num_atoms: int = 300,
     ) -> Dict[str, types.TensorTransformation]:
   """Creates networks used by the agent."""
@@ -96,17 +88,35 @@ def make_networks(
       'observation': observation_network,
   }
 
+def store_parameters(env):
+  """ 
+  A new folder is generated for every new process with unique id. 
+  Path available with path.get_unique_id() 
+  """
+  out_path = paths.process_path('~/acme', 'parameters')
+  write_f_json(out_path, 'phys_par', env._physics.get_par_dict())
+  write_f_json(out_path, 'task_par', env._task.get_par_dict())
+
+def write_f_json(path,fname,dictionary):
+  # Serializing json 
+  json_object = json.dumps(dictionary, indent = 4)
+  
+  # Write output file
+  with open( path + "/" + fname +".json", "w") as outfile:
+    outfile.write(json_object)
+
 
 def main(_):
-  # Create out folder 
-  create_out_folder(FLAGS.out_path)
-
   # Create an environment and grab the spec.
   environment = make_environment()
   environment_spec = specs.make_environment_spec(environment)
 
   # Create the networks to optimize (online) and target networks.
-  agent_networks = make_networks(environment_spec.actions)
+  agent_networks = make_networks(
+      environment_spec.actions,
+      policy_layer_sizes= tuple(map(int,FLAGS.policy_layer_sizes)),
+      critic_layer_sizes= tuple(map(int,FLAGS.critic_layer_sizes))
+  )
 
   # Construct the agent.
   agent = dmpo.DistributionalMPO(
@@ -114,11 +124,14 @@ def main(_):
       policy_network=agent_networks['policy'],
       critic_network=agent_networks['critic'],
       observation_network=agent_networks['observation'], 
-      batch_size = 40,
+      batch_size = FLAGS.batch_size,
       target_policy_update_period = 20,
       target_critic_update_period = 20,
       min_replay_size = 10,
   )
+
+  # Store the running parameters in process related folder
+  store_parameters(environment)
 
   # Run the environment loop.
   loop = EnvironmentLoop(environment, agent)
