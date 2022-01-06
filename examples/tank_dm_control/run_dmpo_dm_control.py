@@ -51,8 +51,8 @@ def make_environment() -> dm_env.Environment:
 
 def make_networks(
     action_spec: specs.BoundedArray,
-    policy_layer_sizes: Sequence[int] = (64,64),
-    critic_layer_sizes: Sequence[int] = (64,64),
+    policy_layer_sizes: Sequence[int] = (8,8),
+    critic_layer_sizes: Sequence[int] = (8,8),
     vmin: float = 0.,
     vmax: float = 40.,
     num_atoms: int = 300,
