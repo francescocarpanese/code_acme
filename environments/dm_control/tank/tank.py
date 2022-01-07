@@ -3,27 +3,26 @@
 from __future__ import annotations
 
 import dm_env
-from dm_env import specs
 import numpy as np
-from environments.tank import Tasks
 from dm_control.rl.control import Physics
 from dm_control.rl.control import PhysicsError
 
 class physics(Physics):
     """Environment built on the `dm_env.Environment` class."""
     def __init__(self,
-                 alpha: float = 1,
-                 dt_sim: float = 0.5e-1,  # [s] Discretization time interval for sim
+                 alpha = 1,
+                 dt_sim = 0.5e-1,  # [s] Discretization time interval for sim
                  hmax = 5,
-                 init_state: np.ndarray = np.array([1.], dtype=np.float32)  # Initial state [x, dxdt]
+                 init_state= [1.]
                  ): 
         
         # Fetch parameters
-        self._state = init_state
-        self._init_state = init_state
+        self._init_state = np.asarray(init_state, dtype=np.float32)
+        self._state = self._init_state
         self._alpha = alpha
         self._dt_sim = dt_sim
         self._hmax = hmax
+
         self._t = 0.
         self._action = np.asarray([0.])
         
@@ -71,3 +70,10 @@ class physics(Physics):
     def set_control(self, action):
         self._action = action
 
+    def get_par_dict(self):
+        return {
+            'alpha': self._alpha,
+            'dt_sim': self._dt_sim,
+            'hmax': self._hmax,
+            'init_state': self._init_state.tolist()
+            }

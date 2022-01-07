@@ -7,20 +7,22 @@ from dm_env import specs
 class Step(Task):
 
     def __init__(self,
-                 maxinflow= 5.,
-                 h_goal1= 1.,
-                 h_goal2= 0.5,
+                 maxIp= 10.,
+                 minIp= -10,
+                 x_goal1= 0.,
+                 x_goal2= 0.1,
                  t_step= float('inf'),
                  debug= False,
                  ) -> None:
         super().__init__()
-        self._h_goal1 = h_goal1
-        self._h_goal2 = h_goal2
+
+        self._x_goal1 = x_goal1
+        self._x_goal2 = x_goal2
         self._t_step = t_step
-        self._maxinflow = maxinflow
+        self._maxIp = maxIp
+        self._minIp = minIp
         self._debug = debug
         self.datadict = []    
-
 
     def initialize_episode(self, physics):
         # Eventually pass some parameters
@@ -28,14 +30,14 @@ class Step(Task):
         physics.__init__()
 
     def get_reference(self, physics) -> float:
-        return self._h_goal1 if physics.time() < self._t_step else self._h_goal2
+        return self._x_goal1 if physics.time() < self._t_step else self._x_goal2
 
     def get_observation(self, physics):
         # Let the actor observe the reference and the state
         return np.concatenate(([self.get_reference(physics)], physics._state))
 
     def get_reward(self, physics):
-        sigma = 0.5
+        sigma = 0.05
         mu = self.get_reference(physics)
         # Gaussian like rewards on target
         return np.exp(-np.power(physics._state[0] - mu, 2.) / (2 * np.power(sigma, 2.)))
@@ -48,19 +50,29 @@ class Step(Task):
     def observation_spec(self, physics):
         """Returns the observation spec."""
         return specs.Array(
-            shape=(2,),
+            shape=(3,),
             dtype=np.float32,
             name='observation')
 
     def action_spec(self, physics):
         """Returns the action spec."""
         return specs.BoundedArray(
-            shape=(1,),
+            shape=(2,),
             dtype=np.float32,
-            minimum=0.,
-            maximum=self._maxinflow,
+            minimum=self._minIp,
+            maximum=self._maxIp,
             name='action')
 
+    def get_par_dict(self):
+        return {
+            'type': 'Step',
+            'x_goal1': self._x_goal1,
+            'x_goal2': self._x_goal2,
+            't_step': self._t_step,
+            'maxIp': self._maxIp,
+            'minIp': self._minIp,
+            't_step': self._t_step
+        }
 
 # ------------- Utils  ------------ 
 def extend_debug_datadict(task, physics, action):
