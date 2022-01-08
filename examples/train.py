@@ -1,22 +1,18 @@
 # python3
-"""Example running MPO on the tank env locally."""
+"""Example training agents on dm_control environments"""
 
-from threading import active_count
 from typing import Dict, Sequence
 
 from absl import app
 from absl import flags
 from acme import agents, specs
 from acme import types
-from acme.agents.tf.mpo.agent import MPO
 from acme.environment_loop import EnvironmentLoop
 from acme.wrappers.single_precision import SinglePrecisionWrapper
 from acme.wrappers.canonical_spec import CanonicalSpecWrapper
 from acme.agents.tf import dmpo, d4pg, mpo
 from acme.tf import networks
 from acme.tf import utils as tf2_utils
-from acme.utils.loggers.tf_summary import TFSummaryLogger
-from acme.utils import loggers
 import dm_env
 import numpy as np
 import sonnet as snt
@@ -24,13 +20,14 @@ from acme.utils import paths
 import json
 import tensorflow as tf 
 
-from environments.tank_dm_control import tank
-from environments.tank_dm_control import Tasks
+from environments.dm_control import tank, MovingCoil0D
+
 from dm_control.rl.control import Environment
 
 flags.DEFINE_integer('num_episodes', 120, 'Number of episodes to run for.')
 flags.DEFINE_float('time_limit', 2., 'End simulation time [s]')
 flags.DEFINE_string('agent', 'dmpo', 'Choose agent ["dmpo", "d4pg", "mpo"] ')
+flags.DEFINE_string('environment', 'tank', 'Choose environment ["tank","moving_coil"]')
 FLAGS = flags.FLAGS
 
 # Set random seed for example reproducibility
@@ -38,13 +35,20 @@ tf.random.set_seed(
   1500
 )
 
+def make_physics_task():
+  # Select environment and task
+  if FLAGS.environment == 'tank':
+    return tank.Physics.physics(), tank.Tasks.Step(t_step = 1.)
+  elif FLAGS.environment == 'moving_coil':
+    return MovingCoil0D.Physics.physics(), MovingCoil0D.Tasks.Step(t_step = 1.)
+  else:
+    raise ValueError(f'Environment {FLAGS.environment} not available')
+
 def make_environment() -> dm_env.Environment:
   """Creates environment."""
-  environment = Environment(
-    tank.physics(),
-    Tasks.Step(t_step= 1.),
-    time_limit=FLAGS.time_limit,
-  )  
+  physics, task = make_physics_task()
+
+  environment = Environment(physics, task, time_limit=FLAGS.time_limit)  
   # Clip actions by bounds
   environment = CanonicalSpecWrapper(
     environment= environment,
