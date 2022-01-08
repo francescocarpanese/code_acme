@@ -20,7 +20,7 @@ def test_default_init(get_env):
     env = Environment(get_env.Physics.physics(),get_env.Tasks.Step())
     TimeStep = env.reset()
     assert all(np.isfinite(TimeStep.observation)), 'Standard initialization-> observations not finite'
-    assert all(np.isfinite(env._physics._init_state)), 'Initial state not finite'
+    assert all(np.isfinite(env._physics._state)), 'Initial state not finite'
 
 def test_N_timesteps(get_env):
     # Instantiate env
