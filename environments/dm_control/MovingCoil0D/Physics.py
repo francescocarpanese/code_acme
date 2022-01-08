@@ -110,5 +110,5 @@ class physics(Physics):
             'x2': self._x2,
             'Ip': self._Ip,
             'm': self._m,
-            'init_state': self._init_state.tolist()
+            'init_state': self._init_state.tolist(), 
             }

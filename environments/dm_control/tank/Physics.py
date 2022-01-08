@@ -75,5 +75,5 @@ class physics(Physics):
             'alpha': self._alpha,
             'dt_sim': self._dt_sim,
             'hmax': self._hmax,
-            'init_state': self._init_state.tolist()
+            'init_state': self._init_state.tolist(),
             }

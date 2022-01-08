@@ -65,7 +65,6 @@ class Step(Task):
 
     def get_par_dict(self):
         return {
-            'type': 'Step',
             'x_goal1': self._x_goal1,
             'x_goal2': self._x_goal2,
             't_step': self._t_step,
@@ -83,7 +82,7 @@ def extend_debug_datadict(task, physics, action):
             'action': action,
             'time': physics.time(),
             'observation': task.get_observation(physics),
-            'reward': task.get_reward(physics)
+            'reward': task.get_reward(physics),
             }
          )
 
