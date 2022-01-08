@@ -3,24 +3,28 @@
 import numpy as np
 from dm_control.rl.control import Task
 from dm_env import specs
+from collections import namedtuple
+from environments.dm_control.utils import param
 
 class Step(Task):
 
-    def __init__(self,
-                 maxinflow= 5.,
-                 h_goal1= 1.,
-                 h_goal2= 0.8,
-                 t_step= float('inf'),
-                 debug= False,
-                 ) -> None:
+    def __init__(self, **kwargs):
         super().__init__()
-        self._h_goal1 = h_goal1
-        self._h_goal2 = h_goal2
-        self._t_step = t_step
-        self._maxinflow = maxinflow
-        self._debug = debug
-        self.datadict = []    
+        # Define default parameters
+        par = namedtuple('par', 'name value description')
+        self.default_par_list = [
+           par('maxinflow',5.,'max control inflow'),
+           par('h_goal1',1.,'[m] target height 1st time interval'),
+           par('h_goal2',0.8,'[m] target height 2nd time interval'),
+           par('t_step',float('inf'),'[s] switching instant 1st->2nd target'),
+           par('debug',False,'if True store data during episode')
+        ]
 
+        # Generate parameter dictionary
+        self.par_dict = {x.name: x.value for x in self.default_par_list}
+        
+        # Overload parameters from inputs
+        param.overload_par_dict(self.par_dict, **kwargs)
 
     def initialize_episode(self, physics):
         # Eventually pass some parameters
@@ -28,7 +32,7 @@ class Step(Task):
         physics.__init__()
 
     def get_reference(self, physics) -> float:
-        return self._h_goal1 if physics.time() < self._t_step else self._h_goal2
+        return self.par_dict['h_goal1'] if physics.time() < self.par_dict['t_step'] else self.par_dict['h_goal2']
 
     def get_observation(self, physics):
         # Let the actor observe the reference and the state
@@ -43,7 +47,7 @@ class Step(Task):
     def before_step(self, action, physics):
         physics.set_control(action)
         # Store data dictionary for debugging
-        if self._debug: extend_debug_datadict(self, physics, action)
+        if self.par_dict['debug']: extend_debug_datadict(self, physics, action)
 
     def observation_spec(self, physics):
         """Returns the observation spec."""
@@ -58,16 +62,18 @@ class Step(Task):
             shape=(1,),
             dtype=np.float32,
             minimum=0.,
-            maximum=self._maxinflow,
+            maximum=self.par_dict['maxinflow'],
             name='action')
 
     def get_par_dict(self):
-        return {
-            'maxinflow': self._maxinflow,
-            'h_goal1': self._h_goal1,
-            'h_goal2': self._h_goal2,
-            't_step': self._t_step,
-        }
+        return self.par_dict
+
+    def write_config_file(self, path, filename):
+        param.write_config_file(self.default_par_list, self.par_dict, path,filename)
+
+    def set_par_from_config_file(self, path):
+        param.set_par_from_config_file(self.par_dict, path)
+
 
 # ------------- Utils  ------------ 
 def extend_debug_datadict(task, physics, action):

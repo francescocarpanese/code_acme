@@ -3,26 +3,30 @@
 import numpy as np
 from dm_control.rl.control import Task
 from dm_env import specs
+from collections import namedtuple
+from environments.dm_control.utils import param
 
 class Step(Task):
 
-    def __init__(self,
-                 maxIp= 10.,
-                 minIp= -10,
-                 x_goal1= 0.,
-                 x_goal2= 0.1,
-                 t_step= float('inf'),
-                 debug= False,
-                 ) -> None:
+    def __init__(self, **kwargs):
         super().__init__()
 
-        self._x_goal1 = x_goal1
-        self._x_goal2 = x_goal2
-        self._t_step = t_step
-        self._maxIp = maxIp
-        self._minIp = minIp
-        self._debug = debug
-        self.datadict = []    
+        # Define default parameters
+        par = namedtuple('par', 'name value description')
+        self.default_par_list = [
+            par('maxIp',10.,"[A] max Ip control coil"),
+            par('minIp',-10.,"[A] min Ip control coil"),
+            par('x_goal1',0.,"[m] x target 1st time interval"),
+            par('x_goal2',0.1,"[m] x target 2nd time interval"),
+            par('t_step',float('inf'),""),
+            par('debug',False,"if True store episode data")
+        ]    
+
+        # Generate parameter dictionary
+        self.par_dict = {x.name: x.value for x in self.default_par_list}
+        
+        # Overload parameters from inputs
+        param.overload_par_dict(self.par_dict, **kwargs)
 
     def initialize_episode(self, physics):
         # Eventually pass some parameters
@@ -30,7 +34,7 @@ class Step(Task):
         physics.__init__()
 
     def get_reference(self, physics) -> float:
-        return self._x_goal1 if physics.time() < self._t_step else self._x_goal2
+        return self.par_dict['x_goal1']  if physics.time() < self.par_dict['t_step'] else self.par_dict['x_goal2']
 
     def get_observation(self, physics):
         # Let the actor observe the reference and the state
@@ -45,7 +49,7 @@ class Step(Task):
     def before_step(self, action, physics):
         physics.set_control(action)
         # Store data dictionary for debugging
-        if self._debug: extend_debug_datadict(self, physics, action)
+        if self.par_dict['debug']: extend_debug_datadict(self, physics, action)
 
     def observation_spec(self, physics):
         """Returns the observation spec."""
@@ -59,21 +63,19 @@ class Step(Task):
         return specs.BoundedArray(
             shape=(2,),
             dtype=np.float32,
-            minimum=self._minIp,
-            maximum=self._maxIp,
+            minimum=self.par_dict['minIp'],
+            maximum=self.par_dict['maxIp'],
             name='action')
 
     def get_par_dict(self):
-        return {
-            'x_goal1': self._x_goal1,
-            'x_goal2': self._x_goal2,
-            't_step': self._t_step,
-            'maxIp': self._maxIp,
-            'minIp': self._minIp,
-            't_step': self._t_step
-        }
+        return self.par_dict
 
-# ------------- Utils  ------------ 
+    def write_config_file(self, path, filename):
+        param.write_config_file(self.default_par_list, self.par_dict, path,filename)
+
+    def set_par_from_config_file(self, path):
+        param.set_par_from_config_file(self.par_dict, path)
+
 def extend_debug_datadict(task, physics, action):
     # Data are stored before taking the step
     task.datadict.append(

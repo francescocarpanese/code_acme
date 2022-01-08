@@ -166,17 +166,8 @@ def store_parameters(env):
   Path available with path.get_unique_id() 
   """
   out_path = paths.process_path('~/acme', 'parameters')
-  write_f_json(out_path, 'phys_par', env._physics.get_par_dict())
-  write_f_json(out_path, 'task_par', env._task.get_par_dict())
-
-def write_f_json(path,fname,dictionary):
-  # Serializing json 
-  json_object = json.dumps(dictionary, indent = 4)
-  
-  # Write output file
-  with open( path + "/" + fname +".json", "w") as outfile:
-    outfile.write(json_object)
-
+  env._physics.write_config_file( out_path  , '/phys_par')
+  env._task.write_config_file(out_path, '/task_par')
 
 def main(_):
   # Create an environment and grab the spec.
