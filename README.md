@@ -10,4 +10,4 @@ The purposes of code-acme package are:
 The implemented environments are meant to be lightwise to enable training with limited computational resources. The focus is to explore learning solutions and compare with standard linear control technique. 
 However, by making use of [acme](https://github.com/deepmind/acme) framework, the experiment can be easilly scaled up to allow for distributed learning and complex environments. 
 
-Ideally the project could serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) and exploit DRL for control purposes. 
+Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) and exploit DRL for control purposes. 
