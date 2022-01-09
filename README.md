@@ -7,4 +7,4 @@ The purposes of code-acme package are:
 *   Provide implementation examples of custom environments in [dm-control](https://github.com/deepmind/dm_control) framework.
 *   Provide examples of using [acme](https://github.com/deepmind/acme) framework to train deep reinforcement learning agent for continuous action space control.
 
-The implemented environments are meant to be lightwise to enable training with limited computational requirements.
+The implemented environments are meant to be lightwise to enable training with limited computational resources.
