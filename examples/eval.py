@@ -1,55 +1,53 @@
-from itertools import count
-from tensorflow._api.v2 import saved_model
 import tensorflow as tf
-from acme.tf.savers import Snapshotter
 from acme.agents.tf import actors
-from acme.tf.networks.distributional import MultivariateNormalDiagHead
-import sonnet as snt
-from acme.tf import networks
 from acme.tf import utils as tf2_utils
 from acme import specs
 import numpy as np
 from acme import wrappers
 import matplotlib.pyplot as plt
-from environments.tank_dm_control import tank
-from environments.tank_dm_control import Tasks
+import toml
+from environments.dm_control import tank, MovingCoil0D
+
 import pandas as pd
 from dm_control.rl.control import Environment
 
-# dmpo
-store_path = '/root/acme/f3bb1052-6d3d-11ec-9e9e-0242ac110002/'
-store_path = '/root/acme/f3bb1052-6d3d-11ec-9e9e-0242ac110002/'
+store_path = '/root/acme/ab7bc9d0-714d-11ec-bd41-0242ac110002/'
+store_path = '/root/acme/b2baf376-7150-11ec-ba54-0242ac110002/'
+store_path = '/root/acme/5f76dae4-7151-11ec-941b-0242ac110002/'
 
-# d4pg
-#store_path = '/root/acme/3f9beb98-6edf-11ec-aab6-0242ac110002/'
-#store_path = '/root/acme/1293cf06-6ee1-11ec-b046-0242ac110002/'
-store_path = '/root/acme/1293cf06-6ee1-11ec-b046-0242ac110002/'
+# Read configuration file from folder
+def get_dict(filename):
+    with open(store_path + 'parameters/' + filename) as file:
+        return  toml.load(file)
 
-store_path = '/root/acme/f3bb1052-6d3d-11ec-9e9e-0242ac110002/'
-store_path = '/root/acme/de08e7e2-6f0a-11ec-a830-0242ac110002/'
-store_path = '/root/acme/4b7c5704-6f11-11ec-b118-0242ac110002/'
+physics_par = get_dict('phys_par.toml')
+task_par = get_dict('task_par.toml')
+
+# Generate physics env and task with parameters as during training
+if physics_par['phys_name'] == 'tank':
+    physics = tank.Physics.physics(**physics_par)
+    task = tank.Tasks.Step(**task_par)
+elif physics_par['phys_name'] == 'MovingCoil':
+    physics = MovingCoil0D.Physics.physics(**physics_par)
+    task = MovingCoil0D.Tasks.Step(**task_par)
+else:
+    raise NameError(f'Physics env {physics_par["phys_name"]} not available')
+
+# Set debug to True to store episode data
+task.par_dict['debug'] = True
 
 # Instantiate env
-env = Environment(tank.physics(), Tasks.Step(debug = True, t_step=1.), time_limit=2. )  
+env = Environment(physics, task, time_limit=2. )  
 env = wrappers.CanonicalSpecWrapper(env, clip= True) # Clip actions by bounds
-# Env was store in single precision hence need 
-# to use single precision to use saved net
 env = wrappers.SinglePrecisionWrapper(env) 
 
-# Specification for network IO
-spec = specs.Array([2], dtype=np.float32)
-inputs = tf2_utils.add_batch_dim(tf2_utils.zeros_like(spec))
-
-# Load policy snapshot
+# Load policy snapshot data
 folder_path =  store_path +'snapshots/policy'
 env_logs_path = store_path + '/logs/environment_loop/logs.csv'
 env_logs = pd.read_csv(env_logs_path)
 
-# Extract solution for debugging
+# Load policy 
 policy_net = tf.saved_model.load(folder_path)
-
-# Check __call__ function return the desired solution
-policy_net(inputs)
 
 # Create the actor which defines how we take actions.
 actor = actors.FeedForwardActor(
@@ -62,9 +60,9 @@ while not timestep.last():
     timestep = env.step(action)
 
 # Fetch sim data
-data = Tasks.pack_datadict(env.task.datadict)
+data = MovingCoil0D.Tasks.pack_datadict(env.task.datadict)
 
-# Plot all time traces
+# Plot all time traces in episode dictionary
 for key in [k for k in data.keys() if k != 'time']:
     plt.plot(data['time'],data[key])
     plt.ylabel(key)
