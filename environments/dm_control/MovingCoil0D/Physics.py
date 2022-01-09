@@ -18,6 +18,7 @@ class physics(Physics):
         # Define default parameters
         par = namedtuple('par', 'name value description')
         self.default_par_list = [
+            par('phys_name','MovingCoil','Name of physics module'),
             par('x1',-1.,"x[m] location fixed coil 1"),
             par('x2',1.,"x[m] location fixed coil 2"),
             par('Ip',1.,"Ip[A] moving coil"),

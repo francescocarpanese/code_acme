@@ -16,6 +16,7 @@ class physics(Physics):
         # Define default parameters
         par = namedtuple('par', 'name value description')
         self.default_par_list = [
+            par('phys_name','tank','Name of physics module'),
             par('alpha',1.,'outflow coefficient'),
             par('dt_sim',0.5e-1,'# [s] Discretization time interval for sim'),
             par('hmax',5,'[m] max water height in tank'),

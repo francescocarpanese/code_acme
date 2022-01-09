@@ -13,11 +13,12 @@ class Step(Task):
         # Define default parameters
         par = namedtuple('par', 'name value description')
         self.default_par_list = [
-           par('maxinflow',5.,'max control inflow'),
-           par('h_goal1',1.,'[m] target height 1st time interval'),
-           par('h_goal2',0.8,'[m] target height 2nd time interval'),
-           par('t_step',float('inf'),'[s] switching instant 1st->2nd target'),
-           par('debug',False,'if True store data during episode')
+            par('task_name','Step','Name of task'),
+            par('maxinflow',5.,'max control inflow'),
+            par('h_goal1',1.,'[m] target height 1st time interval'),
+            par('h_goal2',0.8,'[m] target height 2nd time interval'),
+            par('t_step',float('inf'),'[s] switching instant 1st->2nd target'),
+            par('debug',False,'if True store data during episode')
         ]
 
         # Generate parameter dictionary

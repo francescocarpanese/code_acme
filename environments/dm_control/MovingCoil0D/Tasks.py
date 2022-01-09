@@ -14,6 +14,7 @@ class Step(Task):
         # Define default parameters
         par = namedtuple('par', 'name value description')
         self.default_par_list = [
+            par('task_name','Step','Name of task'),
             par('maxIp',10.,"[A] max Ip control coil"),
             par('minIp',-10.,"[A] min Ip control coil"),
             par('x_goal1',0.,"[m] x target 1st time interval"),
