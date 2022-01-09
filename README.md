@@ -3,7 +3,8 @@
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
 
 The purposes of code-acme package are: 
-*   Implement simple physics environments, based on ode, to be used as examples for integration of custom environments in [dm-control](https://github.com/deepmind/dm_control) framework.
+*   Implement simple physics environments, based on ode, to investigate control of continous action space with deep reinforcement learning. 
+*   Provide implementation examples of custom environments in [dm-control](https://github.com/deepmind/dm_control) framework.
 *   Provide examples of using [acme](https://github.com/deepmind/acme) framework to train deep reinforcement learning agent for continuous action space control.
 
 The implemented environments are meant to be lightwise to enable training with limited computational requirements.
