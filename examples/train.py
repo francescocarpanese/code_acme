@@ -24,9 +24,9 @@ from environments.dm_control import tank, MovingCoil0D
 
 from dm_control.rl.control import Environment
 
-flags.DEFINE_integer('num_episodes', 120, 'Number of episodes to run for.')
+flags.DEFINE_integer('num_episodes', 150, 'Number of episodes to run for.')
 flags.DEFINE_float('time_limit', 2., 'End simulation time [s]')
-flags.DEFINE_string('agent', 'dmpo', 'Choose agent ["dmpo", "d4pg", "mpo"] ')
+flags.DEFINE_string('agent', 'mpo', 'Choose agent ["dmpo", "d4pg", "mpo"] ')
 flags.DEFINE_string('environment', 'tank', 'Choose environment ["tank","moving_coil"]')
 FLAGS = flags.FLAGS
 
