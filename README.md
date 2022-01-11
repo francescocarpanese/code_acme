@@ -35,6 +35,11 @@ source .code-acme/bin/activate
 pip install .[dev]
 ```
 
+## Test installation 
+```
+pytest -v -m "not slow"
+```
+
 # Example/tutorials
 
 # Future work 
