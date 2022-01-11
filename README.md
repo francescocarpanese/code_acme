@@ -14,7 +14,20 @@ Ideally the project would serve as a tutorial for students and researchers to in
 
 # Installation
 
-# virtualenv
+## docker container
+
+```
+make build 
+```
+
+```
+make bash
+pip install .
+```
+
+
+
+## virtualenv
 ```
 pip install virtualenv
 virtualenv .code-acme
