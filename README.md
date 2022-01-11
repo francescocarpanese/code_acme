@@ -14,6 +14,14 @@ Ideally the project would serve as a tutorial for students and researchers to in
 
 # Installation
 
+# virtualenv
+```
+pip install virtualenv
+virtualenv .code-acme
+source .code-acme/bin/activate
+pip install .[dev]
+```
+
 # Example/tutorials
 
 # Future work 
