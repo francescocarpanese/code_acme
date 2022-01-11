@@ -1,19 +1,10 @@
-# Check if GPU is available
-NVCC_RESULT := $(shell which nvcc 2> NULL)
-NVCC_TEST := $(notdir $(NVCC_RESULT))
-ifeq ($(NVCC_TEST),nvcc)
-GPUS=--gpus all
-else
-GPUS=
-endif
-
 # For Windows use CURDIR
 ifeq ($(PWD),)
 PWD := $(CURDIR)
 endif
 
 # Set flag for docker run command
-RUN_FLAGS=-it --rm  ${GPUS} -v ${PWD}:/home/app/code-acme -w /home/app/code-acme 
+RUN_FLAGS=-it --rm  --gpus all -v ${PWD}:/home/app/code-acme -w /home/app/code-acme 
 
 # Default version is tf-core
 version = 0.0
