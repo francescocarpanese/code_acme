@@ -14,6 +14,32 @@ Ideally the project would serve as a tutorial for students and researchers to in
 
 # Installation
 
+## docker container
+
+```
+make build 
+```
+
+```
+make bash
+pip install .
+```
+
+
+
+## virtualenv
+```
+pip install virtualenv
+virtualenv .code-acme
+source .code-acme/bin/activate
+pip install .[dev]
+```
+
+## Test installation 
+```
+pytest -v -m "not slow"
+```
+
 # Example/tutorials
 
 # Future work 
