@@ -34,12 +34,13 @@ where r is the cartesian distance between the two coils.
 
 The coil dynamic follows the 2nd Newton's law
     m d^2 x / d t^2 = F(x, Ip, I1) +  F(x, Ip, I2)
-where,
+
+where:
 m = mass of the moving coil [Kg]
 x = position of the moving coil [m]
 Ip = current in the moving coil [A]
-I1 = current in the fixed coil 1 [A]
-I2 = current in the fixed coil 2 [A]
+I1 = current in the fixed coil 1 [A] (action/actuator)
+I2 = current in the fixed coil 2 [A] (action/actuator)
 """
 
 from __future__ import annotations

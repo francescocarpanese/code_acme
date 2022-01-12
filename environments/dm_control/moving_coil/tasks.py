@@ -29,7 +29,9 @@ from dm_env import specs
 from environments.dm_control.utils import param
 
 class Step(control.Task):
-    """ Class implementing a Step task """
+    """ Step task:
+    Keep constant value and step to different constant value at t_step
+    """
 
     def __init__(self, **kwargs):
         super().__init__()
@@ -112,7 +114,7 @@ class Step(control.Task):
         return self.par_dict
 
     def write_config_file(self, path, filename):
-        """Write toml configuration file from parameters"""
+        """Writes toml configuration file from parameters"""
         param.write_config_file(
             self.default_par_list,
             self.par_dict,
@@ -124,7 +126,7 @@ class Step(control.Task):
         """Read config file and set parameters"""
         param.set_par_from_config_file(self.par_dict, path)
 
-#TODO move the following utils functions elsewhere
+# TODO(fc) move the following utils functions elsewhere
 def extend_debug_datadict(task, physics, action):
     """Append episode data to datadictionary
 
