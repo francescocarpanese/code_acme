@@ -18,7 +18,7 @@ jobs:
     - name: Build Docker image
       run: make build
     - name: Run tests in docker image
-      run: make test
+      run: make test-github
       # Tests are run in docker using the same script as locally, generating a venv
     #- name: Run tests in docker
       #run: |
