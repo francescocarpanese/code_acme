@@ -22,6 +22,7 @@ dm_requirements = [
 
 test_requirements = [
     'pytest-xdist',
+    'pylint'
 ]
 
 dev_requirements = [
