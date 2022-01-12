@@ -34,7 +34,21 @@ indent-string='    '
 # Number of spaces of indent required inside a hanging  or continued line.
 indent-after-paren=4
 
+# Good variable names which should always be accepted, separated by a comma
+good-names=i,j,k,x,y,t,it
+
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
 notes=TODO
+
+
+[BASIC]
+
+# Good variable names which should always be accepted, separated by a comma
+good-names=main,_
+
+
+# Regular expression which should only match function or class names that do
+# not require a docstring.
+no-docstring-rgx=(__.*__|main|test.*|.*test|.*Test)$
