@@ -15,8 +15,12 @@ jobs:
     steps:
     - name: Checkout folder project
       uses: actions/checkout@v2
+    - name: Build Docker image
+      run: make build
+    - name: Run tests in docker image
+      run: make test
       # Tests are run in docker using the same script as locally, generating a venv
-    - name: Run tests in docker
-      run: |
-        docker run --mount "type=bind,src=$(pwd),dst=/tmp/RL" \
-            -w "/tmp/RL" --rm tensorflow/tensorflow:latest-gpu-jupyter /bin/bash test.sh  
+    #- name: Run tests in docker
+      #run: |
+      #  docker run --mount "type=bind,src=$(pwd),dst=/tmp/RL" \
+      #      -w "/tmp/RL" --rm tensorflow/tensorflow:latest-gpu-jupyter /bin/bash test.sh  
