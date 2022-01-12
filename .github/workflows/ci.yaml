@@ -1,0 +1,22 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: RL-tests
+
+on: [push]
+
+jobs:
+  run_RL_test:
+
+    name: tests 
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Checkout folder project
+      uses: actions/checkout@v2
+      # Tests are run in docker using the same script as locally, generating a venv
+    - name: Run tests in docker
+      run: |
+        docker run --mount "type=bind,src=$(pwd),dst=/tmp/RL" \
+            -w "/tmp/RL" --rm tensorflow/tensorflow:latest-gpu-jupyter /bin/bash test.sh  
