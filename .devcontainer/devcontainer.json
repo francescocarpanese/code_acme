@@ -20,7 +20,7 @@
 		"ms-python.vscode-pylance"
 	],
 
-	// Run argument for container when create
+	// Run argument for container when created
 	"runArgs": [ "--gpus", "all"],
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

@@ -9,7 +9,8 @@ from setuptools import setup
 # Core requirements for installation
 install_requirements = []
 
-# Specifics for the tagged version https://github.com/deepmind/acme/releases/tag/0.2.2
+# Specifics for the tagged version 
+# https://github.com/deepmind/acme/releases/tag/0.2.2
 # The zip file contains the requirements for the version.
 
 # Define extra requirements depending on user case
