@@ -1,7 +1,9 @@
+"""Test example taining"""
 import subprocess
 import pytest
 
 def capture(command):
+    """Capture subprocess outpus"""
     proc = subprocess.Popen(command,
         stdout = subprocess.PIPE,
         stderr = subprocess.PIPE,
@@ -14,7 +16,7 @@ def capture(command):
 @pytest.mark.slow
 def test_1episode_training(agent, environment):
     """
-    Test 1 training episode for combination of environment/agent
+    Test 1 training episode for combination of environments/agents
     """
     command = ["python", "examples/train.py",
                "--num_episodes", "1",
