@@ -12,6 +12,7 @@ def test_overloading():
 
 def test_config_file(tmpdir):
     """ Test parameter configuration file handling"""
+
     # Generate parameters with default value and descriptions
     par = namedtuple('par', 'name value description')
     default_par_list = [
