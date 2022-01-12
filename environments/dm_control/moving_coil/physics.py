@@ -1,13 +1,14 @@
 """Moving coil environment as dm_env format """
 
+
 from __future__ import annotations
 from collections import namedtuple
 import numpy as np
-
-import dm_env
 from dm_control.rl import control
-
 from environments.dm_control.utils import param
+
+# Naming for standard physical values doesn't conform to pylint.
+# pylint: disable=invalid-name
 
 class Physics(control.Physics):
     """Environment built on the `dm_control.Environment` class."""
@@ -36,7 +37,7 @@ class Physics(control.Physics):
         self.reset()
 
     def reset(self):
-        """Reset Physical values"""
+        """Resets Physical values"""
         self._state = self.par_dict['init_state']
         self._time = 0.
         self._action =  np.asarray([0., 0.])
@@ -44,13 +45,13 @@ class Physics(control.Physics):
     def after_reset(self):
         pass
 
-    def step(self) -> dm_env.TimeStep[float, float, np.ndarray]:
+    def step(self): # Substeps already handled by dm_env.Environment pylint: disable=arguments-differ
         """Updates the environment according to the action."""
-                         
-        # Advance env in time
-        self._state = self.par_dict['dt_sim']*self._F() + self._state
 
-        # Update sim time 
+        # Advance env in time
+        self._state = self.par_dict['dt_sim']*self._F() + self._state # pylint: disable=attribute-defined-outside-init
+
+        # Update sim time
         self._time += self.par_dict['dt_sim']
 
         # Stick coil to the boundary if reached, force to infinity
@@ -62,18 +63,22 @@ class Physics(control.Physics):
             self._state[1] = 0.
 
 
-    # Attraction force definition between coils
-    def _Fa(self, d, I_coil):
+    def _Fa(self, d, I_coil): 
+        """Attraction force definition between coils"""
         distance = d - self._state[0]
         return self.par_dict['Ip']*I_coil/distance if distance != 0 else 0.
 
     def _F(self):
         """ Physical RHS for ODE d state / dt = F(state, action) """
-        return np.array([self._state[1], self._a(self._action[0], self._action[1])])
+        return np.array([self._state[1],
+             self._a(self._action[0], self._action[1])])
 
-    # Acceleration definition d _state[1] / dt_sim
     def _a(self, I1, I2):
-        return 1/self.par_dict['m']*(self._Fa(self.par_dict['x1'], I1) + self._Fa(self.par_dict['x2'], I2))
+        """Acceleration definition d _state[1] / dt_sim"""
+        return 1/self.par_dict['m']*(
+            self._Fa(self.par_dict['x1'], I1) +
+            self._Fa(self.par_dict['x2'], I2)
+            )
 
 
     def time(self):
@@ -84,33 +89,33 @@ class Physics(control.Physics):
         """return dt simulation step"""
         return self.par_dict['dt_sim']
 
-
-    def check_truncation(self):
-        """ Terminate if one coil reaches boundary or physical states not finite """
-        return  self._state[0] == self.par_dict['x1'] or \
-                self._state[0] == self.par_dict['x2'] or \
-                not all(np.isfinite(self._state))
-
     def check_divergence(self):
-        """ Terminate if one coil reaches boundary or physical states not finite """
+        """ Terminates episode if:
+         - moving coil reaches domain boundary
+         - physical states not finite
+         """
 
         if  self._state[0] <= self.par_dict['x1']:
             raise control.PhysicsError('Moving coil reached fixed coil 1')
 
         if  self._state[0] >= self.par_dict['x2']:
             raise control.PhysicsError('Moving coil reached fixed coil 2')
-        
+
         if not all(np.isfinite(self._state)):
-            raise PhysicsError('System state not finite')
+            raise control.PhysicsError('System state not finite')
 
-    def set_control(self, action):
-        self._action = action
+    def set_control(self, action): # pylint: disable=arguments-renamed
+        self._action = action # pylint: disable=attribute-defined-outside-init
 
-    def get_par_dict(self):
+    def get_par_dict(self) -> dict: # pylint: disable=missing-function-docstring
         return self.par_dict
 
-    def write_config_file(self, path, filename):
-        param.write_config_file(self.default_par_list, self.par_dict, path,filename)
+    def write_config_file(self, path, filename): # pylint: disable=missing-function-docstring
+        param.write_config_file(
+            self.default_par_list,
+            self.par_dict,
+            path,filename
+            )
 
-    def set_par_from_config_file(self, path):
+    def set_par_from_config_file(self, path): # pylint: disable=missing-function-docstring
         param.set_par_from_config_file(self.par_dict, path)
