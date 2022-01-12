@@ -1,52 +1,91 @@
-""" Container for tasks"""
+#MIT License
 
-import numpy as np
-from dm_control.rl.control import Task
-from dm_env import specs
+#Copyright (c) 2022 Francesco Carpanese
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+
+""" Module container of tasks for moving_coil physics"""
+
 from collections import namedtuple
+import numpy as np
+from dm_control.rl import control
+from dm_env import specs
 from environments.dm_control.utils import param
 
-class Step(Task):
+class Step(control.Task):
+    """ Class implementing a Step task """
 
     def __init__(self, **kwargs):
         super().__init__()
 
         # Define default parameters
+        # Parameters are defined with namedtuple to simply serialization
+        # into toml including description
         par = namedtuple('par', 'name value description')
         self.default_par_list = [
-            par('task_name','Step','Name of task'),
-            par('maxIp',10.,"[A] max Ip control coil"),
-            par('minIp',-10.,"[A] min Ip control coil"),
-            par('x_goal1',0.,"[m] x target 1st time interval"),
-            par('x_goal2',0.1,"[m] x target 2nd time interval"),
-            par('t_step',float('inf'),""),
-            par('debug',False,"if True store episode data")
-        ]    
+            par('task_name', 'Step', 'Name of task'),
+            par('maxIp', 10., '[A] max Ip control coil'),
+            par('minIp', -10., '[A] min Ip control coil'),
+            par('x_goal1', 0., '[m] x target 1st time interval'),
+            par('x_goal2', 0.1, '[m] x target 2nd time interval'),
+            par('t_step', float('inf'), ""),
+            par('debug', False, 'if True store episode data')
+        ]
 
         # Generate parameter dictionary
         self.par_dict = {x.name: x.value for x in self.default_par_list}
-        
+
         # Overload parameters from inputs
         param.overload_par_dict(self.par_dict, **kwargs)
 
+        # Init variable to store results when debug == True
+        self.datadict = []
+
     def initialize_episode(self, physics):
+        """Sets the state of the environment at the start of each episode."""
         # Eventually pass some parameters
         self.datadict = []
-        physics.__init__()
+        physics.reset()
 
-    def get_reference(self, physics) -> float:
-        return self.par_dict['x_goal1']  if physics.time() < self.par_dict['t_step'] else self.par_dict['x_goal2']
+    def get_reference(self, physics):
+        """Returns target reference"""
+        if physics.time() < self.par_dict['t_step']:
+            target = self.par_dict['x_goal1']
+        else:
+            target = self.par_dict['x_goal2']
+        return target
 
     def get_observation(self, physics):
         # Let the actor observe the reference and the state
-        return np.concatenate(([self.get_reference(physics)], physics._state))
+        return np.concatenate((
+            [self.get_reference(physics)],
+            physics.get_state(),
+            ))
 
     def get_reward(self, physics):
         sigma = 0.05
-        mu = self.get_reference(physics)
+        mean = self.get_reference(physics)
         # Gaussian like rewards on target
-        return np.exp(-np.power(physics._state[0] - mu, 2.) / (2 * np.power(sigma, 2.)))
-    
+        return np.exp(
+            -np.power(physics.get_state()[0] - mean, 2.)/(2*np.power(sigma, 2.))
+            )
+
     def before_step(self, action, physics):
         physics.set_control(action)
         # Store data dictionary for debugging
@@ -69,19 +108,31 @@ class Step(Task):
             name='action')
 
     def get_par_dict(self):
+        """Returns dictionary with parameters"""
         return self.par_dict
 
     def write_config_file(self, path, filename):
-        param.write_config_file(self.default_par_list, self.par_dict, path,filename)
+        """Write toml configuration file from parameters"""
+        param.write_config_file(
+            self.default_par_list,
+            self.par_dict,
+            path,
+            filename,
+            )
 
     def set_par_from_config_file(self, path):
+        """Read config file and set parameters"""
         param.set_par_from_config_file(self.par_dict, path)
 
+#TODO move the following utils functions elsewhere
 def extend_debug_datadict(task, physics, action):
-    # Data are stored before taking the step
+    """Append episode data to datadictionary
+
+    Data are stored before taking the step
+    """
     task.datadict.append(
         {
-            'state': physics._state,
+            'state': physics.get_state(),
             'action': action,
             'time': physics.time(),
             'observation': task.get_observation(physics),
@@ -90,9 +141,9 @@ def extend_debug_datadict(task, physics, action):
          )
 
 def pack_datadict(datadict):
-    # Pack data dictionary into numpy array
-    # Assume all dictionaries have the same length
+    """
+    Pack data dictionary into numpy array.
+    Assume all value in dictionary have the same length time lenght.
+    """
     return {key: np.asarray([ts[key] for ts in datadict])
-            for key in datadict[0] }
-
-
+            for key in datadict[0]}
