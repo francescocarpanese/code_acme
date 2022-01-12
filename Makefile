@@ -18,3 +18,6 @@ build:
 
 bash:
 	$(DOCKER_RUN) bash
+
+test: 
+	$(DOCKER_RUN) /bin/bash -c "pip install .; pytest"
