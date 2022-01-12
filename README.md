@@ -1,4 +1,4 @@
-# code-acme
+# code_acme
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
