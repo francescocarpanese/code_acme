@@ -1,0 +1,35 @@
+[FORMAT]
+
+# Maximum number of characters on a single line.
+max-line-length=80
+
+# TODO(https://github.com/PyCQA/pylint/issues/3352): Direct pylint to exempt
+# lines made too long by directives to pytype.
+
+# Regexp for a line that is allowed to be longer than the limit.
+ignore-long-lines=(?x)(
+  ^\s*(\#\ )?<?https?://\S+>?$|
+  ^\s*(from\s+\S+\s+)?import\s+.+$)
+
+# Allow the body of an if to be on the same line as the test if there is no
+# else.
+single-line-if-stmt=yes
+
+# List of optional constructs for which whitespace checking is disabled. `dict-
+# separator` is used to allow tabulation in dicts, etc.: {1  : 1,\n222: 2}.
+# `trailing-comma` allows a space between comma and closing bracket: (a, ).
+# `empty-line` allows space-only lines.
+no-space-check=
+
+
+# Maximum number of lines in a module
+max-module-lines=99999
+
+# String used as indentation unit.  The internal Google style guide mandates 2
+# spaces.  Google's externaly-published style guide says 4, consistent with
+# PEP 8.  Here, we use 2 spaces, for conformity with many open-sourced Google
+# projects (like TensorFlow).
+indent-string='    '
+
+# Number of spaces of indent required inside a hanging  or continued line.
+indent-after-paren=4
