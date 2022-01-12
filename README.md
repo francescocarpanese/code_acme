@@ -1,5 +1,8 @@
 # code-acme
 
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+
+
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
 
 The purposes of code-acme package are: 
