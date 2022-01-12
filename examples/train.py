@@ -17,10 +17,9 @@ import dm_env
 import numpy as np
 import sonnet as snt
 from acme.utils import paths
-import json
 import tensorflow as tf 
 
-from environments.dm_control import tank, MovingCoil0D
+from environments.dm_control import tank, moving_coil
 
 from dm_control.rl.control import Environment
 
@@ -38,9 +37,9 @@ tf.random.set_seed(
 def make_physics_task():
   # Select environment and task
   if FLAGS.environment == 'tank':
-    return tank.Physics.physics(), tank.Tasks.Step(t_step = 1.)
+    return tank.physics.Physics(), tank.tasks.Step(t_step = 1.)
   elif FLAGS.environment == 'moving_coil':
-    return MovingCoil0D.Physics.physics(), MovingCoil0D.Tasks.Step(t_step = 1.)
+    return moving_coil.physics.Physics(), moving_coil.tasks.Step(t_step = 1.)
   else:
     raise ValueError(f'Environment {FLAGS.environment} not available')
 

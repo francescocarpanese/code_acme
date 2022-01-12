@@ -1,9 +1,9 @@
 """ Container for tasks"""
-
+from collections import namedtuple
 import numpy as np
 from dm_control.rl.control import Task
 from dm_env import specs
-from collections import namedtuple
+
 from environments.dm_control.utils import param
 
 class Step(Task):

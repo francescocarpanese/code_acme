@@ -1,15 +1,14 @@
 """Moving coil environment as dm_env format """
 
 from __future__ import annotations
-
+from collections import namedtuple
 import dm_env
 import numpy as np
-from dm_control.rl.control import Physics
-from dm_control.rl.control import PhysicsError
-from collections import namedtuple
+from dm_control.rl import control
+
 from environments.dm_control.utils import param
 
-class physics(Physics):
+class Physics(control.Physics):
     """Environment built on the `dm_env.Environment` class."""
     def __init__(self, **kwargs):
 
@@ -69,10 +68,10 @@ class physics(Physics):
     def check_divergence(self):
         """ Terminate if one coil reaches boundary or physical states not finite """
         if  self._state[0] >= self.par_dict['hmax']:
-            raise PhysicsError(f'h > max value = {self.par_dict["hmax"]} [m]') 
+            raise control.PhysicsError(f'h > max value = {self.par_dict["hmax"]} [m]') 
 
         if not all(np.isfinite(self._state)):
-            raise PhysicsError('System state not finite')
+            raise control.PhysicsError('System state not finite')
 
     def set_control(self, action):
         self._action = action

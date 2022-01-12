@@ -1,16 +1,15 @@
 """Moving coil environment as dm_env format """
 
 from __future__ import annotations
-from typing import overload
+from collections import namedtuple
+import numpy as np
 
 import dm_env
-import numpy as np
-from dm_control.rl.control import Physics
-from dm_control.rl.control import PhysicsError
-from collections import namedtuple
+from dm_control.rl import control
+
 from environments.dm_control.utils import param
 
-class physics(Physics):
+class Physics(control.Physics):
     """Environment built on the `dm_control.Environment` class."""
 
     def __init__(self, **kwargs):
@@ -29,19 +28,19 @@ class physics(Physics):
 
         # Generate parameter dictionary
         self.par_dict = {x.name: x.value for x in self.default_par_list}
-        
+
         # Overload parameters from inputs
         param.overload_par_dict(self.par_dict, **kwargs)
 
         # Reset physics
         self.reset()
-        
+
     def reset(self):
         """Reset Physical values"""
         self._state = self.par_dict['init_state']
         self._time = 0.
         self._action =  np.asarray([0., 0.])
-    
+
     def after_reset(self):
         pass
 
@@ -56,11 +55,11 @@ class physics(Physics):
 
         # Stick coil to the boundary if reached, force to infinity
         if self._state[0] <= self.par_dict['x1']:
-           self._state[0] = self.par_dict['x1']
-           self._state[1] = 0.
+            self._state[0] = self.par_dict['x1']
+            self._state[1] = 0.
         elif self._state[0] >= self.par_dict['x2']:
-           self._state[0] = self.par_dict['x2']
-           self._state[1] = 0.
+            self._state[0] = self.par_dict['x2']
+            self._state[1] = 0.
 
 
     # Attraction force definition between coils
@@ -82,12 +81,12 @@ class physics(Physics):
         return self._time
 
     def timestep(self):
-        """dt simulation step"""
+        """return dt simulation step"""
         return self.par_dict['dt_sim']
 
 
     def check_truncation(self):
-        # Terminate if one coil reaches boundary or physical states not finite
+        """ Terminate if one coil reaches boundary or physical states not finite """
         return  self._state[0] == self.par_dict['x1'] or \
                 self._state[0] == self.par_dict['x2'] or \
                 not all(np.isfinite(self._state))
@@ -96,10 +95,10 @@ class physics(Physics):
         """ Terminate if one coil reaches boundary or physical states not finite """
 
         if  self._state[0] <= self.par_dict['x1']:
-            raise PhysicsError(f'Moving coil reached fixed coil 1') 
+            raise control.PhysicsError('Moving coil reached fixed coil 1')
 
         if  self._state[0] >= self.par_dict['x2']:
-            raise PhysicsError(f'Moving coil reached fixed coil 2') 
+            raise control.PhysicsError('Moving coil reached fixed coil 2')
         
         if not all(np.isfinite(self._state)):
             raise PhysicsError('System state not finite')

@@ -1,30 +1,29 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from environments.dm_control import tank
 from dm_control.rl.control import Environment
 import pytest
-from environments.dm_control import MovingCoil0D,tank
+from environments.dm_control import moving_coil,tank
 
 @pytest.fixture(scope="module", params=["Moving_Coil", "tank"])
 def get_env(request):
     if request.param == "tank":
         yield tank
     elif request.param == "Moving_Coil":
-        yield MovingCoil0D
+        yield moving_coil
 
 def test_get_parameter_dict(get_env):
-    physics = get_env.Physics.physics()
+    physics = get_env.physics.Physics()
     assert any(physics.get_par_dict()), 'Empty parameter dictionary'
 
 def test_default_init(get_env):
-    env = Environment(get_env.Physics.physics(),get_env.Tasks.Step())
+    env = Environment(get_env.physics.Physics(),get_env.tasks.Step())
     TimeStep = env.reset()
     assert all(np.isfinite(TimeStep.observation)), 'Standard initialization-> observations not finite'
     assert all(np.isfinite(env._physics._state)), 'Initial state not finite'
 
 def test_N_timesteps(get_env):
     # Instantiate env
-    environment = Environment(get_env.Physics.physics(),get_env.Tasks.Step())
+    environment = Environment(get_env.physics.Physics(),get_env.tasks.Step())
     TimeStep = environment.reset()
     
     # Define null constant actions
@@ -49,7 +48,7 @@ def test_N_timesteps(get_env):
 
 def test_time_stepping_time_limit(get_env):
     # Instantiate env
-    environment = Environment(get_env.Physics.physics(),get_env.Tasks.Step(), time_limit= 0.5)
+    environment = Environment(get_env.physics.Physics(),get_env.tasks.Step(), time_limit= 0.5)
     TimeStep = environment.reset()
 
     # Define null constant actions

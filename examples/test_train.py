@@ -11,6 +11,7 @@ def capture(command):
 
 @pytest.mark.parametrize("environment", ["tank","moving_coil"])
 @pytest.mark.parametrize("agent", ["mpo","dmpo","d4pg"])
+@pytest.mark.slow
 def test_1episode_training(agent, environment):
     """
     Test 1 training episode for combination of environment/agent
