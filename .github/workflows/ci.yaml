@@ -1,14 +1,14 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: RL-tests
+name: test
 
 on: [push]
 
 jobs:
   run_RL_test:
 
-    name: tests 
+    name: test_building_training 
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
