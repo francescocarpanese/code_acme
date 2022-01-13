@@ -10,7 +10,7 @@
 
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
 
-*   Implement simple physics environments, based on ode, to investigate continous action space control with deep reinforcement learning. 
+*   Implement simple environments with ode physics to investigate continous action space control with deep reinforcement learning. 
 *   Provide implementation examples of custom environments with [dm-control](https://github.com/deepmind/dm_control) framework specifics.
 *   Provide examples of using [acme](https://github.com/deepmind/acme) framework to train deep reinforcement learning agent for continuous action space control.
 
@@ -81,17 +81,31 @@ pytest
 
 If you are developing with `devcontainer` and `VScode`, `code_acme` contains `.json` files to set-up the environment.
   
-  
-# Example/tutorials
+# Available environments and tasks
+
+[Here](environments/dm_control) you can find the developed environments. 
+
+* [tank](environments/dm_control/tank): 
+  Control water level in a tank with nozzle acting on inflow. 1D ode with, stable system, 1 continuous space action.  
+* [moving_coil](environments/dm_control/moving_coil):
+  Control position of a linear wire attracted by 2 wires fixed in space, acting on the static wire current. 1D ode, unstable system, 2 competing continous space actions. 
+
+# Examples/tutorial
 
 We provide a colab notebook with an introductive tutorial explaning how to implement a simple physical environment with [dm-control](https://github.com/deepmind/dm_control) framework, train an agent for continuous action space control with [acme](https://github.com/deepmind/acme) and evaluate the results with tensorboard. <a href="https://colab.research.google.com/github/francescocarpanese/code_acme/blob/main/tutorials/tank_control.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
+The script [examples/train.py](examples/train.py) provides examples on how to train [mpo](https://github.com/deepmind/acme/tree/master/acme/agents/tf/mpo), [d4pg](https://github.com/deepmind/acme/tree/master/acme/agents/tf/d4pg), [dmpo](https://github.com/deepmind/acme/tree/master/acme/agents/tf/dmpo) agents on the [developed environments](environments/dm_control). 
+From a docker container bash or virtualenv with `code_acme` installed run, 
+```
+python examples/train.py --environment tank --agent mpo
+```
 
+Policy checkpoints are store in `~acme` path on a dedicate folder for each process. To evaluate and visualize the results of the last updated policy a simple script [examples/eval.py](examples/eval.py) is given.
 
 # Future plans 
-Below some high priority features I plan to add: 
+Below a high priority TODO list: 
 - Examples of training agent with distributed learning using [launchpad](https://github.com/deepmind/launchpad)
-- Improve flexibility in storing checkpoints and snapshots during training following solution in [mava](https://github.com/instadeepai/Mava)
+- Improve flexibility in storing checkpoints and snapshots during training specifying path following solution in [mava](https://github.com/instadeepai/Mava)
 - Add utils for hyperparameter scan and tuning with [wandb](https://wandb.ai/site)
 - Improve parameters handling with [hydra](https://hydra.cc/docs/intro/)
 - Implement more complex tasks and compare DRL performances against linear control solutions.
