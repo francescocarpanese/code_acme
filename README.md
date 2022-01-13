@@ -21,23 +21,36 @@ However, thanks to [acme](https://github.com/deepmind/acme) framework, the exper
 Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) frameworks and exploit deep reinforcement learning for continuous control purposes. 
 
 # Installation
-Checkout the repository 
+Checkout the git repository.
 
 ## docker container
+We recommand docker installation. 
+
 Build docker image.
 
 ```
 make build 
 ```
 
-Open 
+Run bash on docker image. 
 ```
 make bash
+```
+
+The docker image includes all the package dependencies for training including `tensorflow`, `acme`,`dm_control`.
+Running `make bash` will mount `code-acme` folder as a [docker volume](https://docs.docker.com/storage/bind-mounts/). 
+This allows you to develop your code within the docker container or outside with your favourite environment. 
+
+From the docker bash, install `code-acme` package to make sure you are using the latest version of the package, including eventually your modifications. 
+```
+pip install .
 ```
 
 
 
 ## virtualenv
+! 
+
 ```
 pip install virtualenv
 virtualenv .code-acme
@@ -58,7 +71,7 @@ Below some high priority features I plan to incorporate:
 - Improve flexibility in storing checkpoints and snapshots during training following solution in [mava](https://github.com/instadeepai/Mava)
 - Add utils for hyperparameter scan and tuning with [wandb](https://wandb.ai/site)
 - Improve parameters handling with [hydra](https://hydra.cc/docs/intro/)
-- Implement more complex environment with non trivial tasks. 
+- Implement more complex tasks and compare drl performances with linear control solution.
 
 # Contributing
-If you have any question reach out at `francesco [dot] carpanese [at] hotmail [dot] it`, or open an new issue. 
+If you have any question reach out at `francesco [dot] carpanese [at] hotmail [dot] it` or open an new issue. 
