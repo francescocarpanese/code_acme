@@ -32,9 +32,7 @@ flags.DEFINE_string(
 FLAGS = flags.FLAGS
 
 # Set random seed for example reproducibility
-tf.random.set_seed(
-  1500
-)
+tf.random.set_seed(1500)
 
 def make_physics_task():
     "Generate physics and task from flags"
