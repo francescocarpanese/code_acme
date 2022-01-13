@@ -10,7 +10,6 @@
 
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
 
-code-acme goals: 
 *   Implement simple physics environments, based on ode, to investigate continous action space control with deep reinforcement learning. 
 *   Provide implementation examples of custom environments with [dm-control](https://github.com/deepmind/dm_control) framework specifics.
 *   Provide examples of using [acme](https://github.com/deepmind/acme) framework to train deep reinforcement learning agent for continuous action space control.
@@ -20,11 +19,15 @@ However, thanks to [acme](https://github.com/deepmind/acme) framework, the exper
 
 Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) frameworks and exploit deep reinforcement learning for continuous control purposes. 
 
-# Installation
-Checkout the git repository.
 
-## docker container
-We recommand docker installation. 
+
+# Installation
+We recommend docker installation. 
+
+<details>
+<summary>docker container</summary>
+<br>
+
 
 Build docker image.
 
@@ -51,8 +54,13 @@ To test the installation.
 pytest
 ```
 
-## virtualenv
-! 
+</details>
+
+
+<details>
+<summary>virtualenv</summary>
+<br>
+
 
 ```
 pip install virtualenv
@@ -66,6 +74,9 @@ pip install .[dev]
 pytest -v -m "not slow"
 ```
 
+</details>
+  
+  
 # Example/tutorials
 
 # Future plans 
