@@ -106,7 +106,7 @@ Policy checkpoints are store in `~acme` path on a dedicate folder for each proce
 Below a high priority TODO list: 
 - Examples of training agent with distributed learning using [launchpad](https://github.com/deepmind/launchpad)
 - Improve flexibility in storing checkpoints and snapshots during training specifying path following solution in [mava](https://github.com/instadeepai/Mava)
-- Add utils for hyperparameter scan and tuning with [wandb](https://wandb.ai/site)
+- Add utils for hyperparameters scan with [wandb](https://wandb.ai/site)
 - Improve parameters handling with [hydra](https://hydra.cc/docs/intro/)
 - Implement more complex tasks and compare DRL performances against linear control solutions.
 
