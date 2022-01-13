@@ -1,4 +1,4 @@
-<img src="docs/images/code_acme_(1).jpg" width="70%">
+<img src="docs/images/code_acme_(1).jpg" width="50%">
 
 # code_acme
 
