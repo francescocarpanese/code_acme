@@ -23,10 +23,11 @@
 	// Run argument for container when created
 	"runArgs": [ "--gpus", "all"],
 	
+	"features": {
+		"git": "latest"
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
-	"features": {
-		"git": "latest"
 	}
 }
