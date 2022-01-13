@@ -103,11 +103,11 @@ python examples/train.py --environment tank --agent mpo
 Policy checkpoints are store in `~acme` path on a dedicate folder for each process. To evaluate and visualize the results of the last updated policy a simple script [examples/eval.py](examples/eval.py) is given.
 
 # Future plans 
-Below a high priority TODO list: 
+Below a high priority wishing list: 
 - Examples of training agent with distributed learning using [launchpad](https://github.com/deepmind/launchpad)
-- Improve flexibility in storing checkpoints and snapshots during training specifying path following solution in [mava](https://github.com/instadeepai/Mava)
-- Add utils for hyperparameters scan with [wandb](https://wandb.ai/site)
-- Improve parameters handling with [hydra](https://hydra.cc/docs/intro/)
+- Flexibility in storing checkpoints and snapshots during training specifying the storing path following the solution in [mava](https://github.com/instadeepai/Mava)
+- Utils for hyperparameters scan with [wandb](https://wandb.ai/site)
+- Parameters handling with [hydra](https://hydra.cc/docs/intro/)
 - Implement more complex tasks and compare DRL performances against linear control solutions.
 
 # Contributing
