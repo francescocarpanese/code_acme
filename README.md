@@ -1,3 +1,5 @@
+<img src="docs/images/code_acme_(1).jpg" width="70%">
+
 # code_acme
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
