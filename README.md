@@ -41,12 +41,15 @@ The docker image includes all the package dependencies for training including `t
 Running `make bash` will mount `code-acme` folder as a [docker volume](https://docs.docker.com/storage/bind-mounts/). 
 This allows you to develop your code within the docker container or outside with your favourite environment. 
 
-From the docker bash, install `code-acme` package to make sure you are using the latest version of the package, including eventually your modifications. 
+From within docker bash, install `code-acme` package to make sure you are using the latest version of the package, including eventually your modifications. 
 ```
 pip install .
 ```
 
-
+To test the installation.
+```
+pytest
+```
 
 ## virtualenv
 ! 
