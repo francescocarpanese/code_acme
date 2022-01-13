@@ -10,27 +10,29 @@
 
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
 
-The purposes of code-acme package are: 
+code-acme goals: 
 *   Implement simple physics environments, based on ode, to investigate continous action space control with deep reinforcement learning. 
-*   Provide implementation examples of custom environments in [dm-control](https://github.com/deepmind/dm_control) framework.
+*   Provide implementation examples of custom environments with [dm-control](https://github.com/deepmind/dm_control) framework specifics.
 *   Provide examples of using [acme](https://github.com/deepmind/acme) framework to train deep reinforcement learning agent for continuous action space control.
 
-The implemented environments are meant to be lightwise to enable training with limited computational resources. The focus is to explore learning solutions and compare with standard linear control technique. 
-However, by making use of [acme](https://github.com/deepmind/acme) framework, the experiment can be easily scaled up to allow for distributed learning on expensive environments and complex tasks. 
+The implemented environments are meant to be lightwise to enable training with limited computational resources. 
+However, thanks to [acme](https://github.com/deepmind/acme) framework, the experiments can be easily scaled up to allow for distributed learning.
 
-Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) frameworks and exploit deep reinforcement learning for control purposes. 
+Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) frameworks and exploit deep reinforcement learning for continuous control purposes. 
 
 # Installation
+Checkout the repository 
 
 ## docker container
+Build docker image.
 
 ```
 make build 
 ```
 
+Open 
 ```
 make bash
-pip install .
 ```
 
 
@@ -50,4 +52,13 @@ pytest -v -m "not slow"
 
 # Example/tutorials
 
-# Future work 
+# Future plans 
+Below some high priority features I plan to incorporate: 
+- Examples of training agent with distributed learning using [launchpad](https://github.com/deepmind/launchpad)
+- Improve flexibility in storing checkpoints and snapshots during training following solution in [mava](https://github.com/instadeepai/Mava)
+- Add utils for hyperparameter scan and tuning with [wandb](https://wandb.ai/site)
+- Improve parameters handling with [hydra](https://hydra.cc/docs/intro/)
+- Implement more complex environment with non trivial tasks. 
+
+# Contributing
+If you have any question reach out at `francesco [dot] carpanese [at] hotmail [dot] it`, or open an new issue. 
