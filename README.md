@@ -88,7 +88,7 @@ If you are developing with `devcontainer` and `VScode`, `code_acme` contains `.j
 * [tank](environments/dm_control/tank): 
   Control water level in a tank with nozzle acting on inflow. 1D ode with, stable system, 1 continuous space action.  
 * [moving_coil](environments/dm_control/moving_coil):
-  Control position of a linear wire attracted by 2 wires fixed in space, acting on the static wire current. 1D ode, unstable system, 2 competing continous space actions. 
+  Control position of a linear wire attracted by 2 wires fixed in space, acting on the static wire currents. 1D ode, unstable system, 2 competing continuous space actions. 
 
 # Examples/tutorial
 
