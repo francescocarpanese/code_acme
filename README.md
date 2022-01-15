@@ -24,8 +24,9 @@ Ideally the project would serve as a tutorial for students and researchers to in
 # Installation
 We recommend installation with docker container. 
 
+Click the drop-down  below
 <details>
-<summary>docker container</summary>
+<summary><b>docker container</b></summary>
 <br>
 
 
@@ -57,7 +58,7 @@ pytest
 
 
 <details>
-<summary>virtualenv</summary>
+<summary><b>virtualenv</b></summary>
 <br>
 Make sure your user has the installation rights. If not, run with `sudo`.  
 
