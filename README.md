@@ -17,7 +17,7 @@
 The implemented environments are meant to be lightwise to enable training with limited computational resources. 
 However, thanks to [acme](https://github.com/deepmind/acme) framework, the experiments can be easily scaled up to allow for distributed learning.
 
-Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) framework and exploit deep reinforcement learning for continuous control purposes. 
+Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) framework and exploiting deep reinforcement learning for continuous control purposes. 
 
 
 
@@ -43,9 +43,9 @@ make bash
 
 The docker image includes all the package dependencies for training including `tensorflow`, `acme`,`dm_control`.
 Running `make bash` will mount `code_acme` folder as a [docker volume](https://docs.docker.com/storage/bind-mounts/). 
-This allows you to develop your code within  or outside the docker container in your favourite environment. 
+This allows to develop your code within  or outside the docker container in your favourite environment.
 
-From the docker container bash, install `code_acme` package to make sure you are using the latest version of the package, including eventually your local modifications. 
+From the docker container bash, install `code_acme` package to make sure you are using the latest version of the package including eventually your local modifications. 
 ```
 pip install .
 ```
@@ -60,7 +60,7 @@ pytest
 <details>
 <summary><b>virtualenv</b></summary>
 <br>
-Make sure your user has the installation rights. If not, run with `sudo`.  
+Make sure your user has the writing rights. If not, run with `sudo`.  
 
 Generate and activate virtual env.
 ```
