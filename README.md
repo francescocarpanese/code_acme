@@ -7,7 +7,6 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 [![test](https://github.com/francescocarpanese/code_acme/actions/workflows/ci.yaml/badge.svg)](https://github.com/francescocarpanese/code_acme/actions/workflows/ci.yaml)
 
-
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
 
 *   Implement simple environments with ode physics to investigate continous action space control with deep reinforcement learning. 
@@ -18,8 +17,6 @@ The implemented environments are meant to be lightwise to enable training with l
 However, thanks to [acme](https://github.com/deepmind/acme) framework, the experiments can be easily scaled up to allow for distributed learning.
 
 Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) framework and exploiting deep reinforcement learning for continuous control purposes. 
-
-
 
 # Installation
 We recommend installation with docker container. 
