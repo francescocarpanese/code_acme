@@ -4,7 +4,7 @@
 
 # code_acme
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+<a href="https://github.com/psf/black/blob/main/LICENSE"><img alt="License: MIT" src="https://black.readthedocs.io/en/stable/_static/license.svg"></a>
 [![test](https://github.com/francescocarpanese/code_acme/actions/workflows/ci.yaml/badge.svg)](https://github.com/francescocarpanese/code_acme/actions/workflows/ci.yaml)
 
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
