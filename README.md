@@ -109,4 +109,4 @@ Below a high priority wishing list:
 - Implement more complex tasks and compare DRL performances against linear control solutions.
 
 # Contributing
-If you have any question reach out at `francesco [dot] carpanese [at] hotmail [dot] it` or open an new issue. 
+If you have any question reach out at `francesco [dot] carpanese [at] hotmail [dot] it` or in the dicussion.
