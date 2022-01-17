@@ -51,6 +51,7 @@ Running `make bash` will mount `code_acme` folder as a [docker volume](https://d
 This allows to develop your code within  or outside the docker container in your favourite environment.
 
 - Install `code_acme`
+
 From the docker container bash, install `code_acme` package to make sure you are using the latest version of the package including eventually your local modifications. 
 ```
 pip install .
