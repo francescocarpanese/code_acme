@@ -7,7 +7,6 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 [![test](https://github.com/francescocarpanese/code_acme/actions/workflows/ci.yaml/badge.svg)](https://github.com/francescocarpanese/code_acme/actions/workflows/ci.yaml)
 
-
 **C**ontrol **O**rdinary **D**ifferential **E**quations using Deepmind [acme](https://github.com/deepmind/acme) framework. 
 
 *   Implement simple environments with ode physics to investigate continous action space control with deep reinforcement learning. 
@@ -18,8 +17,6 @@ The implemented environments are meant to be lightwise to enable training with l
 However, thanks to [acme](https://github.com/deepmind/acme) framework, the experiments can be easily scaled up to allow for distributed learning.
 
 Ideally the project would serve as a tutorial for students and researchers to interfacing their own custom environments with [acme](https://github.com/deepmind/acme) framework and exploiting deep reinforcement learning for continuous control purposes. 
-
-
 
 # Installation
 We recommend installation with docker container. 
@@ -105,11 +102,11 @@ Policy checkpoints are store in `~acme` path on a dedicate folder for each proce
 
 # Future plans 
 Below a high priority wishing list: 
-- Examples of training agent with distributed learning using [launchpad](https://github.com/deepmind/launchpad)
-- Flexibility in storing checkpoints and snapshots during training specifying the storing path following the solution in [mava](https://github.com/instadeepai/Mava)
-- Utils for hyperparameters scan with [wandb](https://wandb.ai/site)
-- Parameters handling with [hydra](https://hydra.cc/docs/intro/)
+- Examples of training agent with distributed learning using [launchpad](https://github.com/deepmind/launchpad), [#12](https://github.com/francescocarpanese/code_acme/issues/12)
+- Flexibility in storing checkpoints and snapshots during training specifying the storing path following the solution in [mava](https://github.com/instadeepai/Mava), [#13](https://github.com/francescocarpanese/code_acme/issues/13)
+- Utils for hyperparameters scan with [wandb](https://wandb.ai/site), [#14](https://github.com/francescocarpanese/code_acme/issues/14)
+- Parameters handling with [hydra](https://hydra.cc/docs/intro/), [#16](https://github.com/francescocarpanese/code_acme/issues/16)
 - Implement more complex tasks and compare DRL performances against linear control solutions.
 
 # Contributing
-If you have any question reach out at `francesco [dot] carpanese [at] hotmail [dot] it` or open an new issue. 
+If you have any question reach out at `francesco [dot] carpanese [at] hotmail [dot] it` or in the dicussion.
