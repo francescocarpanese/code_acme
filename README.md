@@ -27,27 +27,36 @@ Click the drop-down  below
 <br>
 
 
-Build docker image.
+- Build docker image.
 
 ```
 make build 
 ```
 
-Run bash on docker image. 
+- Run bash shell on docker image. 
+  
+No gpus
 ```
 make bash
 ```
+
+With GPU
+```
+make bash-gpu
+```
+
 
 The docker image includes all the package dependencies for training including `tensorflow`, `acme`,`dm_control`.
 Running `make bash` will mount `code_acme` folder as a [docker volume](https://docs.docker.com/storage/bind-mounts/). 
 This allows to develop your code within  or outside the docker container in your favourite environment.
 
+- Install `code_acme`
 From the docker container bash, install `code_acme` package to make sure you are using the latest version of the package including eventually your local modifications. 
 ```
 pip install .
 ```
 
-Test installation.
+- Test installation.
 ```
 pytest
 ```
