@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/code_acme_(1).jpg" width="50%">
+  <img src="docs/images/code_acme.png" width="50%">
 </p>
 
 # code_acme
