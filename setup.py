@@ -37,7 +37,7 @@ colab_requirements = [
     'absl-py==0.12.0',
     'atari-py==0.2.9',
     'bsuite==0.3.5',
-    'dataclasses==0.8',
+    'dm-acme==0.2.2',
     'dm-control==0.0.364896371',
     'dm-env==1.5',
     'dm-haiku==0.0.4',
