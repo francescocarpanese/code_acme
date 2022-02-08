@@ -17,7 +17,7 @@ install_requirements = []
 dm_requirements = [
     'dm-acme==0.2.2',
     'dm-acme[jax,tf,launchpad,envs]==0.2.2',
-    'tfp-nightly==0.14.0.dev20210818', # Force the same version as in released and not in pypi
+    'tfp-nightly==0.14.0.dev20210818', # Force the same version as in released and not from pypi
     'tensorflow_probability==0.14.1', # dm-acme v0.2.2 comes with
 ]
 
@@ -31,6 +31,36 @@ dev_requirements = [
     'ipykernel',
     'ipython',
 ] + dm_requirements + test_requirements
+
+# Freeze requirements as in dm_acme==0.2.2 release for longstanding colab tutorials
+colab_requirements = [
+    'absl-py==0.12.0',
+    'atari-py==0.2.9',
+    'bsuite==0.3.5',
+    'dataclasses==0.8',
+    'dm-control==0.0.364896371',
+    'dm-env==1.5',
+    'dm-haiku==0.0.4',
+    'dm-launchpad-nightly==0.3.0.dev20210818',
+    'dm-reverb==0.4.0',
+    'dm-sonnet==2.0.0',
+    'dm-tree==0.1.6',
+    'jax==0.2.17',
+    'jaxlib==0.1.68',
+    'jax==0.2.19',
+    'jaxlib==0.1.70',
+    'keras==2.6.0',
+    'optax==0.0.9',
+    'Pillow==8.3.1',
+    'pytype==2021.8.11',
+    'pytest-xdist==2.3.0',
+    'rlax==0.0.4',
+    'tensorflow-datasets==4.4.0',
+    'tensorflow-estimator==2.6.0',
+    'tensorflow==2.6.0',
+    'tfp-nightly==0.14.0.dev20210818',
+    'trfl==1.2.0',
+]
 
 # Extras
 long_description = """TODO  """
@@ -50,6 +80,7 @@ setup(
         'dm':  dm_requirements,
         'dev':  dev_requirements,
         'test': test_requirements,
+        'colab': colab_requirements,
     },
     url="https://github.com/cisk1990/code-acme",
     classifiers=[
