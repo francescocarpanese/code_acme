@@ -1,69 +1,57 @@
-# python3
-"""Install script for setuptools."""
+#MIT License
 
-# TODO clean up and split requirements for testing, dev etc
+#Copyright (c) 2022 Francesco Carpanese
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
+
+"""Install script for setuptools."""
 
 from setuptools import find_packages
 from setuptools import setup
 
 # Core requirements for installation
-install_requirements = []
-
-# Specifics for the tagged version 
-# https://github.com/deepmind/acme/releases/tag/0.2.2
-# The zip file contains the requirements for the version.
-
-# Define extra requirements depending on user case
-dm_requirements = [
-    'dm-acme==0.2.2',
-    'dm-acme[jax,tf,launchpad,envs]==0.2.2',
-    'tfp-nightly==0.14.0.dev20210818', # Force the same version as in released and not from pypi
-    'tensorflow_probability==0.14.1', # dm-acme v0.2.2 comes with
+install_requirements = [
+    'dm-acme[tf,jax,testing,envs]==0.3.0',
 ]
 
+# Define extra requirements depending on user case
 test_requirements = [
     'pytest-xdist',
     'pylint'
-]
+    ]
 
 dev_requirements = [
-    'pytest-xdist',
     'ipykernel',
     'ipython',
-] + dm_requirements + test_requirements
+    ] + test_requirements
 
-# Freeze requirements as in dm_acme==0.2.2 release for longstanding colab tutorials
-colab_requirements = [
-    'absl-py==0.12.0',
-    'atari-py==0.2.9',
-    'bsuite==0.3.5',
-    'dm-acme==0.2.2',
-    'dm-control==0.0.364896371',
-    'dm-env==1.5',
-    'dm-haiku==0.0.4',
-    'dm-launchpad-nightly==0.3.0.dev20210818',
-    'dm-reverb==0.4.0',
-    'dm-sonnet==2.0.0',
-    'dm-tree==0.1.6',
-    'jax==0.2.17',
-    'jaxlib==0.1.68',
-    'jax==0.2.19',
-    'jaxlib==0.1.70',
-    'keras==2.6.0',
-    'optax==0.0.9',
-    'Pillow==8.3.1',
-    'pytype==2021.8.11',
-    'pytest-xdist==2.3.0',
-    'rlax==0.0.4',
-    'tensorflow-datasets==4.4.0',
-    'tensorflow-estimator==2.6.0',
-    'tensorflow==2.6.0',
-    'tfp-nightly==0.14.0.dev20210818',
-    'trfl==1.2.0',
-]
-
-# Extras
-long_description = """TODO  """
+long_description = """code-acme is a library wich provides light physics
+ environments based on ordinary differential equation, wraps them as a 
+ https://github.com/deepmind/dm_control 
+ environements and makes use of 
+ https://github.com/deepmind/acme
+ framework to train agents for continuous action space control.
+ It aims to provides examples to researchers that would like to 
+ approach deep reinforcement learning as a technique for control purposed, 
+ exploring solutions without prohibitive computational costs. 
+ 
+ For more information see [git repository]https://github.com/francescocarpanese/code_acme"""
 
 setup(
     name='code-acme',
@@ -77,10 +65,8 @@ setup(
     packages=find_packages(),
     install_requires=install_requirements,
     extras_require={
-        'dm':  dm_requirements,
         'dev':  dev_requirements,
         'test': test_requirements,
-        'colab': colab_requirements,
     },
     url="https://github.com/cisk1990/code-acme",
     classifiers=[
