@@ -20,6 +20,7 @@ import sonnet as snt
 import tensorflow as tf
 from dm_control.rl.control import Environment
 from environments.dm_control import tank, moving_coil, moving_coil2D
+import shutil
 
 flags.DEFINE_integer('num_episodes', 150, 'Number of episodes to run for.')
 flags.DEFINE_float('time_limit', 2., 'End simulation time [s]')
@@ -29,6 +30,11 @@ flags.DEFINE_string(
   'tank',
   'Choose environment ["tank","moving_coil","moving_coil2D"]'
 )
+flags.DEFINE_string(
+    'output_folder_path',
+    './trainig_outputs',
+    'Define output folder path',
+     )
 FLAGS = flags.FLAGS
 
 # Set random seed for example reproducibility
@@ -193,6 +199,11 @@ def main(_):
 
     # Force snapshot storing of latest behavior policy
     agent._learner._snapshotter.save(force=True) # pylint: disable=protected-access
+
+    # TODO(fc) Look for solution to define the output folder path in learner directly
+    # Copy outputs to output folder path specified as argument
+    shutil.copytree(paths.process_path('~/acme'), FLAGS.output_folder_path)
+
 
 if __name__ == '__main__':
     app.run(main)
