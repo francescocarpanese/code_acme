@@ -118,5 +118,9 @@ def main(_):
     # Generate plots
     make_plot(data, env_logs)
 
+    # Generate movie for MovingCoil env
+    if physics_par['phys_name'] == 'MovingCoil2D':
+        moving_coil2D.make_movie.renderer(env,outpath = FLAGS.plot_path)
+
 if __name__ == '__main__':
     app.run(main)
