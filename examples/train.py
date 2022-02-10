@@ -21,6 +21,7 @@ import tensorflow as tf
 from dm_control.rl.control import Environment
 from environments.dm_control import tank, moving_coil, moving_coil2D
 import shutil
+import os
 
 flags.DEFINE_integer('num_episodes', 150, 'Number of episodes to run for.')
 flags.DEFINE_float('time_limit', 2., 'End simulation time [s]')
@@ -35,6 +36,8 @@ flags.DEFINE_string(
     './trainig_outputs',
     'Define output folder path',
      )
+# TODO(fc) Issues using boolen to be investigated
+flags.DEFINE_string('move_outputs', "True", 'If True, move output to destination specified in flags')
 FLAGS = flags.FLAGS
 
 # Set random seed for example reproducibility
@@ -180,6 +183,11 @@ def store_parameters(env):
     env._task.write_config_file(out_path, '/task_par') # pylint: disable=protected-access
 
 def main(_):
+
+    # Sanity checks for destination folder 
+    if os.path.exists(FLAGS.output_folder_path) and FLAGS.move_outputs == "True":
+        raise IOError(f'{FLAGS.output_folder_path:s} already exsists. Change output destination')
+
     # Create an environment and grab the spec.
     environment = make_environment()
     environment_spec = specs.make_environment_spec(environment)
@@ -202,7 +210,8 @@ def main(_):
 
     # TODO(fc) Look for solution to define the output folder path in learner directly
     # Copy outputs to output folder path specified as argument
-    shutil.copytree(paths.process_path('~/acme'), FLAGS.output_folder_path)
+    if FLAGS.move_outputs == "True":
+        shutil.copytree(paths.process_path('~/acme'), FLAGS.output_folder_path)
 
 
 if __name__ == '__main__':

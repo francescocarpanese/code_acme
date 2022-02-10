@@ -21,6 +21,7 @@ def test_1episode_training(agent, environment):
     command = ["python", "examples/train.py",
                "--num_episodes", "1",
                "--agent",agent,
-               "--environment", environment]
+               "--environment", environment,
+               "--move_outputs", "False",]
     _, _, exitcode = capture(command)
     assert exitcode == 0
