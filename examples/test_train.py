@@ -11,7 +11,7 @@ def capture(command):
     out,err = proc.communicate()
     return out, err, proc.returncode
 
-@pytest.mark.parametrize("environment", ["tank","moving_coil"])
+@pytest.mark.parametrize("environment", ["tank","moving_coil","moving_coil2D"])
 @pytest.mark.parametrize("agent", ["mpo","dmpo","d4pg"])
 @pytest.mark.slow
 def test_1episode_training(agent, environment):

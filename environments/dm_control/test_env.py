@@ -2,15 +2,17 @@
 import numpy as np
 from dm_control.rl.control import Environment
 import pytest
-from environments.dm_control import moving_coil,tank
+from environments.dm_control import moving_coil,tank,moving_coil2D
 
-@pytest.fixture(scope="module", params=["Moving_Coil", "tank"])
+@pytest.fixture(scope="module", params=["Moving_Coil", "tank", "Moving_Coil2D"])
 def get_env(request):
     """Returns environment modules"""
     if request.param == "tank":
         yield tank
     elif request.param == "Moving_Coil":
         yield moving_coil
+    elif request.param == "Moving_Coil2D":
+        yield moving_coil2D
 
 def test_get_parameter_dict(get_env): # pylint: disable=missing-function-docstring,redefined-outer-name
     physics = get_env.physics.Physics()

@@ -19,7 +19,7 @@ import numpy as np
 import sonnet as snt
 import tensorflow as tf
 from dm_control.rl.control import Environment
-from environments.dm_control import tank, moving_coil
+from environments.dm_control import tank, moving_coil, moving_coil2D
 
 flags.DEFINE_integer('num_episodes', 150, 'Number of episodes to run for.')
 flags.DEFINE_float('time_limit', 2., 'End simulation time [s]')
@@ -27,7 +27,7 @@ flags.DEFINE_string('agent', 'mpo', 'Choose agent ["dmpo", "d4pg", "mpo"] ')
 flags.DEFINE_string(
   'environment',
   'tank',
-  'Choose environment ["tank","moving_coil"]'
+  'Choose environment ["tank","moving_coil","moving_coil2D"]'
 )
 FLAGS = flags.FLAGS
 
@@ -42,6 +42,9 @@ def make_physics_task():
     elif FLAGS.environment == 'moving_coil':
         return moving_coil.physics.Physics(),\
            moving_coil.tasks.Step(t_step = 1.)
+    elif FLAGS.environment == 'moving_coil2D':
+            return moving_coil2D.physics.Physics(),\
+        moving_coil2D.tasks.Step(t_step = 1.)
     else:
         raise ValueError(f'Environment {FLAGS.environment} not available')
 
