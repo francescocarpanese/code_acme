@@ -37,7 +37,7 @@ class Step(control.Task):
         super().__init__()
 
         # Define default parameters
-        # Parameters are defined with namedtuple to simply serialization
+        # Parameters are defined with namedtuple to simplify serialization
         # into toml including description
         par = namedtuple('par', 'name value description')
         self.default_par_list = [
@@ -45,7 +45,7 @@ class Step(control.Task):
             par('maxIp', 10., '[A] max Ip control coil'),
             par('minIp', -10., '[A] min Ip control coil'),
             par('x_goal1', [0.,0.], '[m] x target 1st time interval'),
-            par('x_goal2', [0.,0.5], '[m] x target 2nd time interval'),
+            par('x_goal2', [0.,0.25], '[m] x target 2nd time interval'),
             par('t_step', float('inf'), ""),
             par('debug', False, 'if True store episode data')
         ]
@@ -78,7 +78,7 @@ class Step(control.Task):
         return np.concatenate((self.get_reference(physics), physics.get_state()))
 
     def get_reward(self, physics):
-        sigma = 0.05
+        sigma = 0.1
         mean = self.get_reference(physics)
         # Gaussian like rewards on target
         return np.exp(-0.5*(np.linalg.norm(physics.get_state()[0:2] - mean)/sigma)**2)

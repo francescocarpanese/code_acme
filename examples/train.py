@@ -141,7 +141,7 @@ def make_agent(environment_spec, agent_networks):
           critic_network=agent_networks['critic'],
           observation_network=agent_networks['observation'],
           batch_size = 40,
-          target_policy_update_period = 20,
+          target_policy_update_period = 20, 
           target_critic_update_period = 20,
           min_replay_size = 10,
         )
