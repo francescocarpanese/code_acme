@@ -29,7 +29,7 @@ from setuptools import setup
 # Core requirements for installation
 install_requirements = [
     'dm-acme[tf,jax,testing,envs]==0.3.0',
-    'dm-control',
+    'dm-control==0.0.364896371',
 ]
 
 # Define extra requirements depending on user case
